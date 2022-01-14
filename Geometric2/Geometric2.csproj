@@ -96,6 +96,7 @@
     <Compile Include="ModelGeneration\Cube.cs" />
     <Compile Include="ModelGeneration\Element.cs" />
     <Compile Include="ModelGeneration\Lines.cs" />
+    <Compile Include="ModelGeneration\Point.cs" />
     <Compile Include="ModelGeneration\XyzLines.cs" />
     <Compile Include="Models\CubeData.cs" />
     <Compile Include="RasterizationClasses\Camera.cs" />

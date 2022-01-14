@@ -19,40 +19,48 @@ namespace Geometric2
     {
         private void Generate()
         {
-            var topPoint = new Vector3(0, (float)Math.Sqrt(3), 0);
-            diagonalLine.IsDiagonalLine = true;
-            diagonalLine.linePointsList = new List<Vector3>() { new Vector3(0, 0, 0), topPoint };
+            //var topPoint = new Vector3(0, (float)Math.Sqrt(3), 0);
+            //diagonalLine.IsDiagonalLine = true;
+            //diagonalLine.linePointsList = new List<Vector3>() { new Vector3(0, 0, 0), topPoint };
 
-            List<Vector3> cubeLinePoints = new List<Vector3>()
+            List<Vector3> boxPoints = new List<Vector3>()
             {
-                new Vector3(-0.5f, -0.5f, 0.5f), new Vector3(0.5f, -0.5f, 0.5f),
-                new Vector3(0.5f, -0.5f, 0.5f),new Vector3(0.5f, 0.5f, 0.5f),
-                new Vector3(0.5f, 0.5f, 0.5f),new Vector3(-0.5f, 0.5f, 0.5f),
-                new Vector3(-0.5f, 0.5f, 0.5f),new Vector3(-0.5f, -0.5f, 0.5f),
+                new Vector3(-5f, -5f, -5f),
+                new Vector3(-5f, -5f, 5f),
+                new Vector3(5f, -5f, 5f),
+                new Vector3(5f, -5f, -5f),
 
-                new Vector3(-0.5f, -0.5f, -0.5f), new Vector3(0.5f, -0.5f, -0.5f),
-                new Vector3(0.5f, -0.5f, -0.5f),new Vector3(0.5f, 0.5f, -0.5f),
-                new Vector3(0.5f, 0.5f, -0.5f),new Vector3(-0.5f, 0.5f, -0.5f),
-                new Vector3(-0.5f, 0.5f, -0.5f),new Vector3(-0.5f, -0.5f, -0.5f),
-
-                new Vector3(-0.5f, 0.5f, 0.5f),new Vector3(-0.5f, 0.5f, -0.5f),
-                new Vector3(0.5f, 0.5f, 0.5f),new Vector3(0.5f, 0.5f, -0.5f),
-                new Vector3(-0.5f, -0.5f, 0.5f),new Vector3(-0.5f, -0.5f, -0.5f),
-                new Vector3(0.5f, -0.5f, 0.5f),new Vector3(0.5f, -0.5f, -0.5f),
+                new Vector3(-5f, 5f, -5f),
+                new Vector3(-5f, 5f, 5f),
+                new Vector3(5f, 5f, 5f),
+                new Vector3(5f, 5f, -5f)
             };
 
-            var modelMtxPoints = ModelMatrix.CreateModelMatrix(1.0f, (float)Math.PI / 4, 0.0f, (float)Math.Atan(Math.Sqrt(2) / 2), new Vector3(0, (float)Math.Sqrt(3) / 2, 0));
-            foreach (var p in cubeLinePoints)
-            {
-                cubeLines.linePointsList.Add(new Vector3(new Vector4(p, 1.0f) * modelMtxPoints));
-            }
+            boxLines.IsBox = true;
+            boxLines.linePointsList = boxPoints;
+            boxLines.linesIndices = new uint[] { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
 
-            pathLines.IsMoveLine = true;
-            var topPointInModelSpace = new Vector4(topPoint, 1.0f) * CreateModelMatrix.CreateMatrixForPoint(globalPhysicsData);
-            for (int i = 0; i < 1000000; i++)
-            {
-                pathLines.linePointsList.Add(new Vector3(topPointInModelSpace));
-            }
+
+            controlFrameLines.IsControlFrame = true;
+            controlFrameLines.IsControlFrame = true;
+
+
+            //var modelMtxPoints = ModelMatrix.CreateModelMatrix(1.0f, (float)Math.PI / 4, 0.0f, (float)Math.Atan(Math.Sqrt(2) / 2), new Vector3(0, (float)Math.Sqrt(3) / 2, 0));
+            //foreach (var p in cubeLinePoints)
+            //{
+            //    cubeLines.linePointsList.Add(new Vector3(new Vector4(p, 1.0f) * modelMtxPoints));
+            //}
+
+            //pathLines.IsMoveLine = true;
+            //var topPointInModelSpace = new Vector4(topPoint, 1.0f) * CreateModelMatrix.CreateMatrixForPoint(globalPhysicsData);
+            //for (int i = 0; i < 1000000; i++)
+            //{
+            //    pathLines.linePointsList.Add(new Vector3(topPointInModelSpace));
+            //}
+
+
+
+
         }
 
         private void glControl1_Load(object sender, EventArgs e)
@@ -64,6 +72,7 @@ namespace Geometric2
             Elements.Add(cubeLines);
             Elements.Add(cube);
             Elements.Add(pathLines);
+            Elements.Add(boxLines);
             GL.ClearColor(Color.LightCyan);
             GL.Enable(EnableCap.DepthTest);
             _shader = new Shader("./../../../Shaders/VertexShaderLines.vert", "./../../../Shaders/FragmentShaderLines.frag");
@@ -159,6 +168,24 @@ namespace Geometric2
                 prev_xPosMouse = xPosMouse;
                 prev_yPosMouse = yPosMouse;
             }
+
+            if (e.Button == MouseButtons.Right)
+            {
+                xPosMouse = e.X;
+                yPosMouse = e.Y;
+                if (prev_xPosMouse != -1 && prev_yPosMouse != -1)
+                {
+                    Matrix4 viewMatrix = _camera.GetViewMatrix();
+                    Matrix4 projectionMatrix = _camera.GetProjectionMatrix();
+                    Vector3 prevMousePos = GetCoursorGlobalPosition((prev_xPosMouse, prev_yPosMouse), viewMatrix, projectionMatrix, _camera);
+                    Vector3 currentMousePos = GetCoursorGlobalPosition((xPosMouse, yPosMouse), viewMatrix, projectionMatrix, _camera);
+                    Vector3 mouseMove = currentMousePos - prevMousePos;
+                    globalPhysicsData.Translation += mouseMove;
+
+                    prev_xPosMouse = xPosMouse;
+                    prev_yPosMouse = yPosMouse;
+                }
+            }
         }
 
         private void glControl1_MouseUp(object sender, MouseEventArgs e)
@@ -189,6 +216,36 @@ namespace Geometric2
 
         private void glControl1_KeyUp(object sender, KeyEventArgs e)
         {
+        }
+
+        public Vector3 GetCoursorGlobalPosition((int, int) screenPos, Matrix4 viewMatrix, Matrix4 projectionMatrix, Camera _camera)
+        {
+            (float, float, float) screenFloatPos = GetScreenFloatPos(screenPos);
+            return CountCoursorPos(screenFloatPos, viewMatrix, projectionMatrix, _camera);
+        }
+
+        private Vector3 CountCoursorPos((float, float, float) screenFloatPos, Matrix4 viewMatrix, Matrix4 projectionMatrix, Camera _camera)
+        {
+            Vector4 coursor = new Vector4(screenFloatPos.Item1, screenFloatPos.Item2, screenFloatPos.Item3, 1.0f) * Matrix4.Invert(projectionMatrix);
+            coursor.Z = -1.0f;
+            coursor.W = 0.0f;
+            coursor = coursor * Matrix4.Invert(viewMatrix);
+            coursor = coursor.Normalized();
+
+            float R = _camera.CameraDist;
+            coursor.X = _camera.GetCameraPosition().X + coursor.X * R;
+            coursor.Y = _camera.GetCameraPosition().Y + coursor.Y * R;
+            coursor.Z = _camera.GetCameraPosition().Z + coursor.Z * R;
+
+            return coursor.Xyz;
+        }
+        private (float, float, float) GetScreenFloatPos((int, int) screenPos)
+        {
+            float x = (float)((2.0 / glControl1.Width) * screenPos.Item1 - 1);
+            float y = -(float)((2.0 / glControl1.Height) * screenPos.Item2 - 1);
+            float z = -1.0f;
+
+            return (x, y, z);
         }
     }
 }

@@ -55,6 +55,10 @@ namespace Geometric2
         private Lines cubeLines = new Lines();
         private Lines pathLines = new Lines();
 
+        private Lines boxLines = new Lines();
+        private Lines controlFrameLines = new Lines();
+        private Lines controlPointLines = new Lines();
+
         int prev_xPosMouse = -1, prev_yPosMouse = -1;
         GlobalPhysicsData globalPhysicsData = new GlobalPhysicsData();
 
@@ -77,27 +81,27 @@ namespace Geometric2
 
         private void displayCubeCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            globalPhysicsData.displayCube = displayCubeCheckBox.Checked;
+            globalPhysicsData.displayControlFrame = displayControlFrameCheckBox.Checked;
         }
 
         private void displayWallsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            globalPhysicsData.displayWalls = displayWallsCheckBox.Checked;
+            globalPhysicsData.displayBezierCube = displayBezierCubeBox.Checked;
         }
 
         private void displayDiagonalCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            globalPhysicsData.displayDiagonal = displayDiagonalCheckBox.Checked;
+            globalPhysicsData.displayDisortBox = displayDistortBlockCheckBox.Checked;
         }
 
-        private void displayPathCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void displayBoxCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            globalPhysicsData.displayPath = displayPathCheckBox.Checked;
+            globalPhysicsData.displayBox = displayBoxCheckBox.Checked;
         }
 
         private void displayPlaneCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            globalPhysicsData.displayPlane = displayPlaneCheckBox.Checked;
+            globalPhysicsData.displayControlPoints = displayControlPointsCheckBox.Checked;
         }
 
         private void pathLengthUpDown_ValueChanged(object sender, EventArgs e)
@@ -331,6 +335,7 @@ namespace Geometric2
         {
             isProgramWorking = false;
         }
+
 
         private void DrawPath()
         {

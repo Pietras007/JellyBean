@@ -62,8 +62,6 @@ namespace Geometric2.ModelGeneration
         Texture texture;
         Texture specular;
         Texture noise;
-        float diagonalRoundInRadian = 0;
-        float yRoundInRadian = 0;
         public CubeData CubeData { get; set; }
 
         public Cube()
@@ -103,7 +101,7 @@ namespace Geometric2.ModelGeneration
 
         public override void RenderGlElement(Shader _shader, Shader _shaderLight, Vector3 rotationCentre, GlobalPhysicsData globalPhysicsData)
         {
-            if (globalPhysicsData.displayWalls)
+            //if (globalPhysicsData.displayWalls)
             {
                 _shaderLight.Use();
 

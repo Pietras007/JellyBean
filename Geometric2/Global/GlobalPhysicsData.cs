@@ -1,19 +1,23 @@
-﻿using OpenTK;
+﻿using Geometric2.ModelGeneration;
+using OpenTK;
 using System;
 
 namespace Geometric2.Global
 {
     public class GlobalPhysicsData
     {
+        public Point[] points = new Point[64];
+        public Vector3 Translation = new Vector3(0, 0, 0);
         //Help
         public object lockPathPointsList = new object { };
 
         //Visualization Settings
-        public bool displayCube = true;
-        public bool displayDiagonal = true;
-        public bool displayPath = true;
-        public bool displayPlane = true;
-        public bool displayWalls = true;
+        public bool displayControlPoints = true;
+        public bool displayControlFrame = true;
+        public bool displayBox = true;
+        public bool displayBezierCube = true;
+        public bool displayDisortBox = true;
+
         public int numberOfPointsToShow = 1000;
 
         //Data from user

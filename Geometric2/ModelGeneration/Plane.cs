@@ -64,7 +64,7 @@ namespace Geometric2.ModelGeneration
 
         public override void RenderGlElement(Shader _shader, Shader _shaderLight, Vector3 rotationCentre, GlobalPhysicsData globalPhysicsData)
         {
-            if (globalPhysicsData.displayPlane)
+            //if (globalPhysicsData.displayPlane)
             {
                 var model = ModelMatrix.CreateModelMatrix(1, 0, 0, 0, new Vector3(0, 0, 0));
                 _shaderLight.Use();

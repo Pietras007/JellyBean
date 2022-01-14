@@ -12,17 +12,33 @@ namespace Geometric2.ModelGeneration
 {
     public class Lines : Element
     {
-        public bool IsDiagonalLine { get; set; }
+        public bool IsBox { get; set; }
+        public bool IsControlFrame { get; set; }
         public bool IsMoveLine { get; set; }
         public List<Vector3> linePointsList = new List<Vector3>();
-        float[] linesPoints = new float[] { };
-        uint[] linesIndices = new uint[] { };
+        public float[] linesPoints = new float[] { };
+        public uint[] linesIndices = new uint[] { };
         int linesVBO, linesVAO, linesEBO;
+        public bool setEBODirectly = false;
 
 
         public override void CreateGlElement(Shader _shader, Shader _shaderLight)
         {
-            GenerateLines();
+            if (IsBox)
+            {
+                GenerateOnlyPoints();
+            }
+
+            if (IsControlFrame)
+            {
+                GenerateOnlyPoints();
+            }
+
+            //else
+            //{
+            //    GenerateLines();
+            //}
+
             _shader.Use();
             var a_Position_Location = _shader.GetAttribLocation("a_Position");
             linesVAO = GL.GenVertexArray();
@@ -39,42 +55,19 @@ namespace Geometric2.ModelGeneration
 
         public override void RenderGlElement(Shader _shader, Shader _shaderLight, Vector3 rotationCentre, GlobalPhysicsData globalPhysicsData)
         {
-            RotationQuaternion = CreateModelMatrix.GetQuaternionFromPhysicsData(globalPhysicsData);
+            if (IsControlFrame)
+            {
+                Translation = globalPhysicsData.Translation;
+            }
 
             _shader.Use();
             var cubeSize = (float)globalPhysicsData.InitialConditionsData.cubeEdgeLength;
             Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(cubeSize, cubeSize, cubeSize), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
             _shader.SetMatrix4("model", model);
             GL.BindVertexArray(linesVAO);
-            if (IsDiagonalLine)
-            {
-                if (globalPhysicsData.displayDiagonal)
-                {
-                    GenerateLines();
-                    _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Purple));
-                    GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
-                }
-            }
-            else if (IsMoveLine)
-            {
-                if (globalPhysicsData.displayPath)
-                {
-                    FillLineGeometry();
-                    _shader.SetMatrix4("model", Matrix4.Identity);
-                    GenerateLinesForPath(globalPhysicsData);
-                    _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
-                    GL.DrawElements(PrimitiveType.LineStrip, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
-                }
-            }
-            else
-            {
-                if (globalPhysicsData.displayCube)
-                {
-                    GenerateLines();
-                    _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
-                    GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
-                }
-            }
+
+            _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
+            GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
 
             GL.BindVertexArray(0);
         }
@@ -107,33 +100,17 @@ namespace Geometric2.ModelGeneration
             linesIndices = tempLinesIndices;
         }
 
-        private void GenerateLinesForPath(GlobalPhysicsData globalPhysicsData)
+        private void GenerateOnlyPoints()
         {
-            var tempLinesPoints = new float[linesPoints.Length];
-            var tempLinesIndices = new uint[globalPhysicsData.numberOfPointsToShow];
-
-            lock (globalPhysicsData.lockPathPointsList)
+            linesPoints = new float[3 * linePointsList.Count];
+            int idx = 0;
+            foreach (var p in linePointsList)
             {
-                int pointsInList = linePointsList.Count;
-                int allAvailablePoints = linesPoints.Length / 3;
-                for (int i = 0; i < allAvailablePoints; i++)
-                {
-                    int offset = pointsInList - allAvailablePoints;
-                    tempLinesPoints[3 * i] = linePointsList[offset + i].X;
-                    tempLinesPoints[3 * i + 1] = linePointsList[offset + i].Y;
-                    tempLinesPoints[3 * i + 2] = linePointsList[offset + i].Z;
-                }
-
-                int idx = 0;
-                for (int i = allAvailablePoints - globalPhysicsData.numberOfPointsToShow; i < allAvailablePoints; i++)
-                {
-                    tempLinesIndices[idx] = (uint)i;
-                    idx++;
-                }
+                linesPoints[3 * idx] = p.X;
+                linesPoints[3 * idx + 1] = p.Y;
+                linesPoints[3 * idx + 2] = p.Z;
+                idx++;
             }
-
-            linesPoints = tempLinesPoints;
-            linesIndices = tempLinesIndices;
         }
     }
 }
