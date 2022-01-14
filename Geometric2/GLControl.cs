@@ -19,10 +19,6 @@ namespace Geometric2
     {
         private void Generate()
         {
-            //var topPoint = new Vector3(0, (float)Math.Sqrt(3), 0);
-            //diagonalLine.IsDiagonalLine = true;
-            //diagonalLine.linePointsList = new List<Vector3>() { new Vector3(0, 0, 0), topPoint };
-
             List<Vector3> boxPoints = new List<Vector3>()
             {
                 new Vector3(-5f, -5f, -5f),
@@ -41,26 +37,24 @@ namespace Geometric2
             boxLines.linesIndices = new uint[] { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
 
 
+            List<Vector3> controlPoints = new List<Vector3>();
+            for(int i = 0; i < 4; i++)
+            {
+                for(int j = 0; j < 4; j++)
+                {
+                    for(int k = 0; k < 4; k++)
+                    {
+                        controlPoints.Add(new Vector3(-1.5f + i, -1.5f + j, -1.5f + k));
+                    }
+                }
+            }
+
+            for(int i = 0; i < controlPoints.Count; i++)
+            {
+                globalPhysicsData.points[i] = new ModelGeneration.Point(controlPoints[i], _camera, i);
+            }
+
             controlFrameLines.IsControlFrame = true;
-            controlFrameLines.IsControlFrame = true;
-
-
-            //var modelMtxPoints = ModelMatrix.CreateModelMatrix(1.0f, (float)Math.PI / 4, 0.0f, (float)Math.Atan(Math.Sqrt(2) / 2), new Vector3(0, (float)Math.Sqrt(3) / 2, 0));
-            //foreach (var p in cubeLinePoints)
-            //{
-            //    cubeLines.linePointsList.Add(new Vector3(new Vector4(p, 1.0f) * modelMtxPoints));
-            //}
-
-            //pathLines.IsMoveLine = true;
-            //var topPointInModelSpace = new Vector4(topPoint, 1.0f) * CreateModelMatrix.CreateMatrixForPoint(globalPhysicsData);
-            //for (int i = 0; i < 1000000; i++)
-            //{
-            //    pathLines.linePointsList.Add(new Vector3(topPointInModelSpace));
-            //}
-
-
-
-
         }
 
         private void glControl1_Load(object sender, EventArgs e)
@@ -73,6 +67,7 @@ namespace Geometric2
             Elements.Add(cube);
             Elements.Add(pathLines);
             Elements.Add(boxLines);
+            Elements.Add(controlFrameLines);
             GL.ClearColor(Color.LightCyan);
             GL.Enable(EnableCap.DepthTest);
             _shader = new Shader("./../../../Shaders/VertexShaderLines.vert", "./../../../Shaders/FragmentShaderLines.frag");
@@ -181,11 +176,29 @@ namespace Geometric2
                     Vector3 currentMousePos = GetCoursorGlobalPosition((xPosMouse, yPosMouse), viewMatrix, projectionMatrix, _camera);
                     Vector3 mouseMove = currentMousePos - prevMousePos;
                     globalPhysicsData.Translation += mouseMove;
-
-                    prev_xPosMouse = xPosMouse;
-                    prev_yPosMouse = yPosMouse;
+                    globalPhysicsData.Translation.X = clamp(globalPhysicsData.Translation.X, -5, 5);
+                    globalPhysicsData.Translation.Y = clamp(globalPhysicsData.Translation.Y, -5, 5);
+                    globalPhysicsData.Translation.Z = clamp(globalPhysicsData.Translation.Z, -5, 5);
                 }
+
+                prev_xPosMouse = xPosMouse;
+                prev_yPosMouse = yPosMouse;
             }
+        }
+
+        private float clamp(float val, float min, float max)
+        {
+            if(val < min)
+            {
+                return min;
+            }
+
+            if(val > max)
+            {
+                return max;
+            }
+
+            return val;
         }
 
         private void glControl1_MouseUp(object sender, MouseEventArgs e)

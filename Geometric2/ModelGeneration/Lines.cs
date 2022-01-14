@@ -31,13 +31,8 @@ namespace Geometric2.ModelGeneration
 
             if (IsControlFrame)
             {
-                GenerateOnlyPoints();
+                GenerateControlFramePoints(null);
             }
-
-            //else
-            //{
-            //    GenerateLines();
-            //}
 
             _shader.Use();
             var a_Position_Location = _shader.GetAttribLocation("a_Position");
@@ -58,6 +53,8 @@ namespace Geometric2.ModelGeneration
             if (IsControlFrame)
             {
                 Translation = globalPhysicsData.Translation;
+                GenerateControlFramePoints(globalPhysicsData);
+                FillLineGeometry();
             }
 
             _shader.Use();
@@ -79,6 +76,27 @@ namespace Geometric2.ModelGeneration
             GL.BufferData(BufferTarget.ArrayBuffer, linesPoints.Length * sizeof(float), linesPoints, BufferUsageHint.DynamicDraw);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, linesEBO);
             GL.BufferData(BufferTarget.ElementArrayBuffer, linesIndices.Length * sizeof(uint), linesIndices, BufferUsageHint.DynamicDraw);
+        }
+
+        private void GenerateControlFramePoints(GlobalPhysicsData globalPhysicsData)
+        {
+            if (globalPhysicsData != null)
+            {
+                linePointsList = new List<Vector3>()
+                {
+                    new Vector3(-1.5f, -1.5f, -1.5f),
+                    new Vector3(-1.5f, -1.5f, 1.5f),
+                    new Vector3(1.5f, -1.5f, 1.5f),
+                    new Vector3(1.5f, -1.5f, -1.5f),
+
+                    new Vector3(-1.5f, 1.5f, -1.5f),
+                    new Vector3(-1.5f, 1.5f, 1.5f),
+                    new Vector3(1.5f, 1.5f, 1.5f),
+                    new Vector3(1.5f, 1.5f, -1.5f)
+                };
+                GenerateOnlyPoints();
+                linesIndices = new uint[] { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
+            }
         }
 
         private void GenerateLines()
