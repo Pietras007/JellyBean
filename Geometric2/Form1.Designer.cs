@@ -145,7 +145,7 @@ namespace Geometric2
             // cameraLightCheckBox
             // 
             this.cameraLightCheckBox.AutoSize = true;
-            this.cameraLightCheckBox.Location = new System.Drawing.Point(129, 629);
+            this.cameraLightCheckBox.Location = new System.Drawing.Point(128, 626);
             this.cameraLightCheckBox.Name = "cameraLightCheckBox";
             this.cameraLightCheckBox.Size = new System.Drawing.Size(88, 17);
             this.cameraLightCheckBox.TabIndex = 4;
@@ -445,7 +445,7 @@ namespace Geometric2
             // gravityOnCheckBox
             // 
             this.gravityOnCheckBox.AutoSize = true;
-            this.gravityOnCheckBox.Location = new System.Drawing.Point(16, 629);
+            this.gravityOnCheckBox.Location = new System.Drawing.Point(15, 626);
             this.gravityOnCheckBox.Name = "gravityOnCheckBox";
             this.gravityOnCheckBox.Size = new System.Drawing.Size(76, 17);
             this.gravityOnCheckBox.TabIndex = 10;
@@ -456,7 +456,7 @@ namespace Geometric2
             // otherLabel
             // 
             this.otherLabel.AutoSize = true;
-            this.otherLabel.Location = new System.Drawing.Point(94, 595);
+            this.otherLabel.Location = new System.Drawing.Point(93, 592);
             this.otherLabel.Name = "otherLabel";
             this.otherLabel.Size = new System.Drawing.Size(48, 13);
             this.otherLabel.TabIndex = 9;
