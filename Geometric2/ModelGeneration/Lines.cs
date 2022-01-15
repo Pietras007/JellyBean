@@ -57,16 +57,29 @@ namespace Geometric2.ModelGeneration
                 FillLineGeometry();
             }
 
-            _shader.Use();
-            var cubeSize = (float)globalPhysicsData.InitialConditionsData.cubeEdgeLength;
-            Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(cubeSize, cubeSize, cubeSize), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
-            _shader.SetMatrix4("model", model);
-            GL.BindVertexArray(linesVAO);
+            if (IsBox && globalPhysicsData.displayBox)
+            {
+                _shader.Use();
+                var cubeSize = (float)globalPhysicsData.InitialConditionsData.cubeEdgeLength;
+                Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(cubeSize, cubeSize, cubeSize), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
+                _shader.SetMatrix4("model", model);
+                GL.BindVertexArray(linesVAO);
+                _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
+                GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
+                GL.BindVertexArray(0);
+            }
 
-            _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
-            GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
-
-            GL.BindVertexArray(0);
+            if(IsControlFrame && globalPhysicsData.displayControlFrame)
+            {
+                _shader.Use();
+                var cubeSize = (float)globalPhysicsData.InitialConditionsData.cubeEdgeLength;
+                Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(cubeSize, cubeSize, cubeSize), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
+                _shader.SetMatrix4("model", model);
+                GL.BindVertexArray(linesVAO);
+                _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
+                GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
+                GL.BindVertexArray(0);
+            }
         }
 
         private void FillLineGeometry()
@@ -94,6 +107,9 @@ namespace Geometric2.ModelGeneration
                     new Vector3(1.5f, 1.5f, 1.5f),
                     new Vector3(1.5f, 1.5f, -1.5f)
                 };
+
+
+
                 GenerateOnlyPoints();
                 linesIndices = new uint[] { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
             }

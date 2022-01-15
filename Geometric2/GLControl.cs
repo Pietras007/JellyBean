@@ -61,11 +61,11 @@ namespace Geometric2
         {
             Generate();
             Elements.Add(xyzLines);
-            Elements.Add(plane);
-            Elements.Add(diagonalLine);
-            Elements.Add(cubeLines);
-            Elements.Add(cube);
-            Elements.Add(pathLines);
+            //Elements.Add(plane);
+            //Elements.Add(diagonalLine);
+            //Elements.Add(cubeLines);
+            //Elements.Add(cube);
+            //Elements.Add(pathLines);
             Elements.Add(boxLines);
             Elements.Add(controlFrameLines);
             GL.ClearColor(Color.LightCyan);
