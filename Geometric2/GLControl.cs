@@ -55,6 +55,7 @@ namespace Geometric2
             }
 
             controlFrameLines.IsControlFrame = true;
+            controlPointLines.IsControlPoints = true;
         }
 
         private void glControl1_Load(object sender, EventArgs e)
@@ -68,6 +69,7 @@ namespace Geometric2
             //Elements.Add(pathLines);
             Elements.Add(boxLines);
             Elements.Add(controlFrameLines);
+            Elements.Add(controlPointLines);
             GL.ClearColor(Color.LightCyan);
             GL.Enable(EnableCap.DepthTest);
             _shader = new Shader("./../../../Shaders/VertexShaderLines.vert", "./../../../Shaders/FragmentShaderLines.frag");
