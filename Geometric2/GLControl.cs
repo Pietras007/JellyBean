@@ -46,7 +46,8 @@ namespace Geometric2
             {
                 Elements.Add(p);
             }
-            //Elements.Add(cube);
+            Elements.Add(cube);
+            cube.first_globalPhysicsData = globalPhysicsData;
             Elements.Add(boxLines);
             Elements.Add(controlFrameLines);
             Elements.Add(controlPointLines);

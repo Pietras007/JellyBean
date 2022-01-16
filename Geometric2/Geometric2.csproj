@@ -84,6 +84,7 @@
     <Compile Include="Global\Enums.cs" />
     <Compile Include="Global\GlobalPhysicsData.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
+    <Compile Include="Helpers\HelpFunctions.cs" />
     <Compile Include="Helpers\QuaternionExtensions.cs" />
     <Compile Include="MatrixHelpers\ModelMatrix.cs" />
     <Compile Include="MatrixHelpers\ProjectionMatrix.cs" />
