@@ -27,10 +27,10 @@ namespace Geometric2.Global
         public bool gravityOn = false;
 
         //new physics data
-        public float SpringStiffness = 1.0f;
-        public float ControlSpringStiffness = 10.0f;
-        public float FrictionCoefficient = 0.0f;
-        public float ControlPointMass = 1.0f;
+        public float ControlPointMass = 0.1f;
+        public float SpringStiffness = 200.0f;
+        public float FrictionCoefficient = 1.0f;
+        public float ControlSpringStiffness = 1000.0f;
         public float RandomVelocityScale = 0.0f;
     }
 }
