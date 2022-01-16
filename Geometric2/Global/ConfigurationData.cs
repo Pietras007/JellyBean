@@ -4,8 +4,7 @@
     {
         public static readonly float ControlFrameCubeEdgeLength = 3.0f;
         public static readonly float ControlFrameCanGoOutBoxFor = 5.0f;
-        public static readonly float BoxEdgeLen = 10.0f;
-        public static readonly int BezierBoxDivisions = 15;
         public static readonly float CollisionBoxEdgeLength = 10.0f;
+        public static readonly int BezierBoxDivisions = 15;
     }
 }
