@@ -20,7 +20,6 @@ namespace Geometric2.ModelGeneration
         public float[] linesPoints = new float[] { };
         public uint[] linesIndices = new uint[] { };
         int linesVBO, linesVAO, linesEBO;
-        public bool setEBODirectly = false;
 
 
         public override void CreateGlElement(Shader _shader, Shader _shaderLight)
@@ -53,44 +52,33 @@ namespace Geometric2.ModelGeneration
         {
             if (IsBox && globalPhysicsData.displayBox)
             {
-                _shader.Use();
-                var cubeSize = (float)globalPhysicsData.InitialConditionsData.cubeEdgeLength;
-                Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(cubeSize, cubeSize, cubeSize), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
-                _shader.SetMatrix4("model", model);
-                GL.BindVertexArray(linesVAO);
-                _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
-                GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
-                GL.BindVertexArray(0);
+                RenderWithColor(_shader, Color.Black, rotationCentre);
             }
 
             if (IsControlFrame && globalPhysicsData.displayControlFrame)
             {
                 GenerateControlFramePoints(globalPhysicsData, globalPhysicsData.Translation);
                 FillLineGeometry();
-
-                _shader.Use();
-                var cubeSize = (float)globalPhysicsData.InitialConditionsData.cubeEdgeLength;
-                Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(cubeSize, cubeSize, cubeSize), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
-                _shader.SetMatrix4("model", model);
-                GL.BindVertexArray(linesVAO);
-                _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
-                GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
-                GL.BindVertexArray(0);
+                RenderWithColor(_shader, Color.Black, rotationCentre);
             }
 
             if (IsControlPoints && globalPhysicsData.displayControlPoints)
             {
                 GenerateControlLines(globalPhysicsData);
                 FillLineGeometry();
-                _shader.Use();
-                var cubeSize = (float)globalPhysicsData.InitialConditionsData.cubeEdgeLength;
-                Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(cubeSize, cubeSize, cubeSize), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
-                _shader.SetMatrix4("model", model);
-                GL.BindVertexArray(linesVAO);
-                _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.OrangeRed));
-                GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
-                GL.BindVertexArray(0);
+                RenderWithColor(_shader, Color.OrangeRed, rotationCentre);
             }
+        }
+
+        private void RenderWithColor(Shader _shader, Color color, Vector3 rotationCentre)
+        {
+            _shader.Use();
+            Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(1.0f, 1.0f, 1.0f), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
+            _shader.SetMatrix4("model", model);
+            GL.BindVertexArray(linesVAO);
+            _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(color));
+            GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
+            GL.BindVertexArray(0);
         }
 
         private void FillLineGeometry()
@@ -135,25 +123,6 @@ namespace Geometric2.ModelGeneration
                     0, 8, 1, 9, 4, 10, 5, 11, 2, 13, 3, 12, 6, 15, 7, 14
                 };
             }
-        }
-
-        private void GenerateLines()
-        {
-            var tempLinesPoints = new float[3 * linePointsList.Count];
-            var tempLinesIndices = new uint[linePointsList.Count];
-            int idx = 0;
-            var tempLinePointsReference = linePointsList;
-            foreach (var p in tempLinePointsReference)
-            {
-                tempLinesPoints[3 * idx] = p.X;
-                tempLinesPoints[3 * idx + 1] = p.Y;
-                tempLinesPoints[3 * idx + 2] = p.Z;
-                tempLinesIndices[idx] = (uint)idx;
-                idx++;
-            }
-
-            linesPoints = tempLinesPoints;
-            linesIndices = tempLinesIndices;
         }
 
         private void GenerateOnlyPoints()

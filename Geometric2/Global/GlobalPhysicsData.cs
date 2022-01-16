@@ -11,6 +11,13 @@ namespace Geometric2.Global
         //Help
         public object lockPathPointsList = new object { };
 
+        //Conditions
+        public float pointMass;
+        public float resilience_c1;
+        public float resilience_c2;
+        public float tenacityRate_k;
+        public float integrationStep;
+
         //Visualization Settings
         public bool displayControlPoints = true;
         public bool displayControlFrame = true;
@@ -18,11 +25,8 @@ namespace Geometric2.Global
         public bool displayBezierCube = true;
         public bool displayDisortBox = true;
 
-        public int numberOfPointsToShow = 1000;
-
         //Data from user
         public bool gravityOn = false;
-        public InitialConditionsData InitialConditionsData = new InitialConditionsData();
 
         //Visualization Data
         public double diagonalRoundInRadianX = 0.0;
@@ -35,11 +39,5 @@ namespace Geometric2.Global
         //physics data
         public Vector3d gravitation = new Vector3d(0, -9.81, 0);
         public Quaterniond gravitationQuaternion = new Quaterniond(0, -9.81, 0, 0);
-
-        public void CalculateInitialRotationQuaternion()
-        {
-            rotationQuaternion = Quaternion.FromEulerAngles((float)InitialConditionsData.cubeDeviationRadian, 0, 0).Normalized();
-            rotationQuaternionInitial = Quaternion.FromEulerAngles((float)InitialConditionsData.cubeDeviationRadian, 0, 0).Normalized();
-        }
     }
 }

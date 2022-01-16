@@ -38,13 +38,14 @@ namespace Geometric2
 
 
             List<Vector3> controlPoints = new List<Vector3>();
-            for(int i = 0; i < 4; i++)
+            var x = ConfigurationData.ControlFrameCubeEdgeLength / 2.0f;
+            for (int i = 0; i < 4; i++)
             {
                 for(int j = 0; j < 4; j++)
                 {
                     for(int k = 0; k < 4; k++)
                     {
-                        controlPoints.Add(new Vector3(-1.5f + i, -1.5f + j, -1.5f + k));
+                        controlPoints.Add(new Vector3(-x + i, -x + j, -x + k));
                     }
                 }
             }
@@ -60,13 +61,14 @@ namespace Geometric2
 
         private void glControl1_Load(object sender, EventArgs e)
         {
+            _camera = new Camera(new Vector3(0, 5, 15), glControl1.Width / (float)glControl1.Height);
             Generate();
             Elements.Add(xyzLines);
-            //Elements.Add(plane);
-            //Elements.Add(diagonalLine);
-            //Elements.Add(cubeLines);
+            foreach(var p in globalPhysicsData.points)
+            {
+                Elements.Add(p);
+            }
             //Elements.Add(cube);
-            //Elements.Add(pathLines);
             Elements.Add(boxLines);
             Elements.Add(controlFrameLines);
             Elements.Add(controlPointLines);
@@ -81,7 +83,7 @@ namespace Geometric2
                 el.CreateGlElement(_shader, _shaderLight);
             }
 
-            _camera = new Camera(new Vector3(0, 5, 15), glControl1.Width / (float)glControl1.Height);
+
         }
 
         private void glControl1_Paint(object sender, PaintEventArgs e)
