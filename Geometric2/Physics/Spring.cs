@@ -21,7 +21,7 @@ namespace Geometric2.Physics
         public void CalculateNextForce(float stiffness)
         {
             var deltaLength = Vector3.Distance(P0.LastData.Position, P1.LastData.Position) - InitialLength;
-            if (deltaLength < Eps) //TODO: check what happens without this if
+            if (deltaLength < Eps)
                 return;
 
             var force = stiffness * deltaLength;
@@ -29,7 +29,7 @@ namespace Geometric2.Physics
 
             var hookeForce = force * vecP0P1;
 
-            P0.Data.Force += hookeForce;//TODO: should be OK but check if sign is correct
+            P0.Data.Force += hookeForce;
             P1.Data.Force += -hookeForce;
         }
 

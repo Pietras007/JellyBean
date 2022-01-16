@@ -42,18 +42,25 @@ namespace Geometric2
             var deltaX = ConfigurationData.ControlFrameCubeEdgeLength / 3.0f;
             for (int i = 0; i < 4; i++)
             {
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
-                    for(int k = 0; k < 4; k++)
+                    for (int k = 0; k < 4; k++)
                     {
                         controlPoints.Add(new Vector3(-x + i * deltaX, -x + j * deltaX, -x + k * deltaX));
                     }
                 }
             }
 
-            for(int i = 0; i < controlPoints.Count; i++)
+            for (int i = 0; i < controlPoints.Count; i++)
             {
                 globalPhysicsData.points[i] = new ModelGeneration.Point(controlPoints[i], _camera, i);
+            }
+
+            int[] controlFramePointsIndices = { 0, 3, 12, 15, 48, 51, 60, 63 };
+
+            for (int i = 0; i < controlFramePointsIndices.Length; i++)
+            {
+                globalPhysicsData.controlFramePointsPositions[i] = globalPhysicsData.points[controlFramePointsIndices[i]].CenterPosition;
             }
 
             controlFrameLines.IsControlFrame = true;
@@ -65,7 +72,7 @@ namespace Geometric2
             _camera = new Camera(new Vector3(0, 5, 15), glControl1.Width / (float)glControl1.Height);
             Generate();
             Elements.Add(xyzLines);
-            foreach(var p in globalPhysicsData.points)
+            foreach (var p in globalPhysicsData.points)
             {
                 Elements.Add(p);
             }
@@ -194,12 +201,12 @@ namespace Geometric2
 
         private float clamp(float val, float min, float max)
         {
-            if(val < min)
+            if (val < min)
             {
                 return min;
             }
 
-            if(val > max)
+            if (val > max)
             {
                 return max;
             }

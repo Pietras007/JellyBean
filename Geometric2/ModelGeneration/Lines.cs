@@ -109,6 +109,8 @@ namespace Geometric2.ModelGeneration
                     new Vector3(x, x, -x) + translation
                 };
 
+                MapControlFramePointsPositions(globalPhysicsData, linePointsList);
+
                 linePointsList.Add(globalPhysicsData.points[0].Position());//8
                 linePointsList.Add(globalPhysicsData.points[3].Position());//9
                 linePointsList.Add(globalPhysicsData.points[12].Position());//10
@@ -118,8 +120,6 @@ namespace Geometric2.ModelGeneration
                 linePointsList.Add(globalPhysicsData.points[51].Position());//13
                 linePointsList.Add(globalPhysicsData.points[60].Position());//14
                 linePointsList.Add(globalPhysicsData.points[63].Position());//15
-
-                MapControlFramePointsPositions(globalPhysicsData, linePointsList);
 
                 if (draw)
                 {
