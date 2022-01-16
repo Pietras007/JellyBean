@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Geometric2.Global
+﻿namespace Geometric2.Global
 {
     public static class ConfigurationData
     {
@@ -12,5 +6,6 @@ namespace Geometric2.Global
         public static readonly float ControlFrameCanGoOutBoxFor = 5.0f;
         public static readonly float BoxEdgeLen = 10.0f;
         public static readonly int BezierBoxDivisions = 15;
+        public static readonly float CollisionBoxEdgeLength = 10.0f;
     }
 }
