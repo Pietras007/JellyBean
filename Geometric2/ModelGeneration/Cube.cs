@@ -180,7 +180,7 @@ namespace Geometric2.ModelGeneration
 
             for (int i = 0; i < 16; i++)
             {
-                pointsIndicesForPatches[1][i] = i + 48; //TODO: change to 1
+                pointsIndicesForPatches[1][i] = i + 48;
             }
 
             pointsIndicesForPatches[2] = new int[] { 0, 1, 2, 3, 16, 17, 18, 19, 32, 33, 34, 35, 48, 49, 50, 51 };
