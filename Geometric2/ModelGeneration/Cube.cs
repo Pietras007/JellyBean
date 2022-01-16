@@ -250,7 +250,6 @@ namespace Geometric2.ModelGeneration
                     resultPoint.Z = HelpFunctions.DeKastilio(new float[] { four1.Z, four2.Z, four3.Z, four4.Z }, v, 4);
                     allPatchPoints[idx] = resultPoint;
                     idx++;
-                    //allPatchPoints[(int)(u * ConfigurationData.BezierBoxDivisions) + (int)(v * ConfigurationData.BezierBoxDivisions)] = resultPoint;
                 }
             }
 
