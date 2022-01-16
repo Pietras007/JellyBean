@@ -103,7 +103,7 @@ namespace Geometric2.Physics
             var x = (float)_random.NextDouble() * 2f - 1f;
             var y = (float)_random.NextDouble() * 2f - 1f;
             var z = (float)_random.NextDouble() * 2f - 1f;
-            return new Vector3(x, y, z) * scale;
+            return new Vector3(x, y, z).Normalized() * scale;
         }
 
         public static Spring[] GenerateSprings(ControlPoint[] controlPoints)
