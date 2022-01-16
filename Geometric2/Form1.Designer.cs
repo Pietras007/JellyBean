@@ -39,6 +39,10 @@ namespace Geometric2
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cameraLightCheckBox = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.collisionCoefficientNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.shakeButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
             this.randomVelocityScaleUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
@@ -61,15 +65,19 @@ namespace Geometric2
             this.otherLabel = new System.Windows.Forms.Label();
             this.visualizationLabel = new System.Windows.Forms.Label();
             this.initialConditionsLabel = new System.Windows.Forms.Label();
-            this.shakeButton = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.collisionModel_Model1 = new System.Windows.Forms.RadioButton();
+            this.collisionModel_Model2 = new System.Windows.Forms.RadioButton();
             this.menuStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.collisionCoefficientNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomVelocityScaleUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.integrationStepNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.angularVelocityNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeDeviationNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeDensityNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeEdgeLengthNumericUpDown)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // glControl1
@@ -144,7 +152,7 @@ namespace Geometric2
             // cameraLightCheckBox
             // 
             this.cameraLightCheckBox.AutoSize = true;
-            this.cameraLightCheckBox.Location = new System.Drawing.Point(128, 489);
+            this.cameraLightCheckBox.Location = new System.Drawing.Point(127, 571);
             this.cameraLightCheckBox.Name = "cameraLightCheckBox";
             this.cameraLightCheckBox.Size = new System.Drawing.Size(88, 17);
             this.cameraLightCheckBox.TabIndex = 4;
@@ -154,6 +162,10 @@ namespace Geometric2
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.panel2);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.collisionCoefficientNumericUpDown);
+            this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.shakeButton);
             this.panel1.Controls.Add(this.resetButton);
             this.panel1.Controls.Add(this.randomVelocityScaleUpDown1);
@@ -182,6 +194,58 @@ namespace Geometric2
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(252, 885);
             this.panel1.TabIndex = 6;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(77, 321);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(79, 13);
+            this.label3.TabIndex = 36;
+            this.label3.Text = "Collision model:";
+            // 
+            // collisionCoefficientNumericUpDown
+            // 
+            this.collisionCoefficientNumericUpDown.DecimalPlaces = 2;
+            this.collisionCoefficientNumericUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.collisionCoefficientNumericUpDown.Location = new System.Drawing.Point(116, 286);
+            this.collisionCoefficientNumericUpDown.Maximum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.collisionCoefficientNumericUpDown.Name = "collisionCoefficientNumericUpDown";
+            this.collisionCoefficientNumericUpDown.Size = new System.Drawing.Size(120, 20);
+            this.collisionCoefficientNumericUpDown.TabIndex = 35;
+            this.collisionCoefficientNumericUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.collisionCoefficientNumericUpDown.ValueChanged += new System.EventHandler(this.collisionCoefficientNumericUpDown_ValueChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 288);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(100, 13);
+            this.label2.TabIndex = 34;
+            this.label2.Text = "Collision coefficient:";
+            // 
+            // shakeButton
+            // 
+            this.shakeButton.Location = new System.Drawing.Point(81, 616);
+            this.shakeButton.Name = "shakeButton";
+            this.shakeButton.Size = new System.Drawing.Size(75, 23);
+            this.shakeButton.TabIndex = 33;
+            this.shakeButton.Text = "Shake Cube";
+            this.shakeButton.UseVisualStyleBackColor = true;
+            this.shakeButton.Click += new System.EventHandler(this.shakeButton_Click);
             // 
             // resetButton
             // 
@@ -215,14 +279,13 @@ namespace Geometric2
             this.label1.Size = new System.Drawing.Size(120, 13);
             this.label1.TabIndex = 30;
             this.label1.Text = "Random Velocity Scale:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // displayBoxCheckBox
             // 
             this.displayBoxCheckBox.AutoSize = true;
             this.displayBoxCheckBox.Checked = true;
             this.displayBoxCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.displayBoxCheckBox.Location = new System.Drawing.Point(21, 378);
+            this.displayBoxCheckBox.Location = new System.Drawing.Point(20, 460);
             this.displayBoxCheckBox.Name = "displayBoxCheckBox";
             this.displayBoxCheckBox.Size = new System.Drawing.Size(81, 17);
             this.displayBoxCheckBox.TabIndex = 29;
@@ -235,7 +298,7 @@ namespace Geometric2
             this.displayBezierCubeBox.AutoSize = true;
             this.displayBezierCubeBox.Checked = true;
             this.displayBezierCubeBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.displayBezierCubeBox.Location = new System.Drawing.Point(21, 402);
+            this.displayBezierCubeBox.Location = new System.Drawing.Point(20, 484);
             this.displayBezierCubeBox.Name = "displayBezierCubeBox";
             this.displayBezierCubeBox.Size = new System.Drawing.Size(120, 17);
             this.displayBezierCubeBox.TabIndex = 28;
@@ -419,7 +482,7 @@ namespace Geometric2
             this.displayControlPointsCheckBox.AutoSize = true;
             this.displayControlPointsCheckBox.Checked = true;
             this.displayControlPointsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.displayControlPointsCheckBox.Location = new System.Drawing.Point(21, 332);
+            this.displayControlPointsCheckBox.Location = new System.Drawing.Point(20, 414);
             this.displayControlPointsCheckBox.Name = "displayControlPointsCheckBox";
             this.displayControlPointsCheckBox.Size = new System.Drawing.Size(128, 17);
             this.displayControlPointsCheckBox.TabIndex = 16;
@@ -432,7 +495,7 @@ namespace Geometric2
             this.displayDistortBlockCheckBox.AutoSize = true;
             this.displayDistortBlockCheckBox.Checked = true;
             this.displayDistortBlockCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.displayDistortBlockCheckBox.Location = new System.Drawing.Point(21, 425);
+            this.displayDistortBlockCheckBox.Location = new System.Drawing.Point(20, 507);
             this.displayDistortBlockCheckBox.Name = "displayDistortBlockCheckBox";
             this.displayDistortBlockCheckBox.Size = new System.Drawing.Size(123, 17);
             this.displayDistortBlockCheckBox.TabIndex = 15;
@@ -445,7 +508,7 @@ namespace Geometric2
             this.displayControlFrameCheckBox.AutoSize = true;
             this.displayControlFrameCheckBox.Checked = true;
             this.displayControlFrameCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.displayControlFrameCheckBox.Location = new System.Drawing.Point(21, 355);
+            this.displayControlFrameCheckBox.Location = new System.Drawing.Point(20, 437);
             this.displayControlFrameCheckBox.Name = "displayControlFrameCheckBox";
             this.displayControlFrameCheckBox.Size = new System.Drawing.Size(128, 17);
             this.displayControlFrameCheckBox.TabIndex = 13;
@@ -465,7 +528,7 @@ namespace Geometric2
             // gravityOnCheckBox
             // 
             this.gravityOnCheckBox.AutoSize = true;
-            this.gravityOnCheckBox.Location = new System.Drawing.Point(15, 489);
+            this.gravityOnCheckBox.Location = new System.Drawing.Point(14, 571);
             this.gravityOnCheckBox.Name = "gravityOnCheckBox";
             this.gravityOnCheckBox.Size = new System.Drawing.Size(76, 17);
             this.gravityOnCheckBox.TabIndex = 10;
@@ -476,7 +539,7 @@ namespace Geometric2
             // otherLabel
             // 
             this.otherLabel.AutoSize = true;
-            this.otherLabel.Location = new System.Drawing.Point(93, 455);
+            this.otherLabel.Location = new System.Drawing.Point(92, 537);
             this.otherLabel.Name = "otherLabel";
             this.otherLabel.Size = new System.Drawing.Size(48, 13);
             this.otherLabel.TabIndex = 9;
@@ -485,7 +548,7 @@ namespace Geometric2
             // visualizationLabel
             // 
             this.visualizationLabel.AutoSize = true;
-            this.visualizationLabel.Location = new System.Drawing.Point(79, 295);
+            this.visualizationLabel.Location = new System.Drawing.Point(78, 386);
             this.visualizationLabel.Name = "visualizationLabel";
             this.visualizationLabel.Size = new System.Drawing.Size(91, 13);
             this.visualizationLabel.TabIndex = 8;
@@ -500,15 +563,39 @@ namespace Geometric2
             this.initialConditionsLabel.TabIndex = 7;
             this.initialConditionsLabel.Text = "CONDITIONS:";
             // 
-            // shakeButton
+            // panel2
             // 
-            this.shakeButton.Location = new System.Drawing.Point(82, 534);
-            this.shakeButton.Name = "shakeButton";
-            this.shakeButton.Size = new System.Drawing.Size(75, 23);
-            this.shakeButton.TabIndex = 33;
-            this.shakeButton.Text = "Shake Cube";
-            this.shakeButton.UseVisualStyleBackColor = true;
-            this.shakeButton.Click += new System.EventHandler(this.shakeButton_Click);
+            this.panel2.Controls.Add(this.collisionModel_Model2);
+            this.panel2.Controls.Add(this.collisionModel_Model1);
+            this.panel2.Location = new System.Drawing.Point(3, 347);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(246, 27);
+            this.panel2.TabIndex = 37;
+            // 
+            // collisionModel_Model1
+            // 
+            this.collisionModel_Model1.AutoSize = true;
+            this.collisionModel_Model1.Checked = true;
+            this.collisionModel_Model1.Location = new System.Drawing.Point(30, 4);
+            this.collisionModel_Model1.Name = "collisionModel_Model1";
+            this.collisionModel_Model1.Size = new System.Drawing.Size(63, 17);
+            this.collisionModel_Model1.TabIndex = 0;
+            this.collisionModel_Model1.TabStop = true;
+            this.collisionModel_Model1.Text = "Model 1";
+            this.collisionModel_Model1.UseVisualStyleBackColor = true;
+            this.collisionModel_Model1.CheckedChanged += new System.EventHandler(this.collisionModel_Model1_CheckedChanged);
+            // 
+            // collisionModel_Model2
+            // 
+            this.collisionModel_Model2.AutoSize = true;
+            this.collisionModel_Model2.Location = new System.Drawing.Point(134, 4);
+            this.collisionModel_Model2.Name = "collisionModel_Model2";
+            this.collisionModel_Model2.Size = new System.Drawing.Size(63, 17);
+            this.collisionModel_Model2.TabIndex = 1;
+            this.collisionModel_Model2.TabStop = true;
+            this.collisionModel_Model2.Text = "Model 2";
+            this.collisionModel_Model2.UseVisualStyleBackColor = true;
+            this.collisionModel_Model2.CheckedChanged += new System.EventHandler(this.collisionModel_Model2_CheckedChanged);
             // 
             // Form1
             // 
@@ -526,12 +613,15 @@ namespace Geometric2
             this.menuStrip2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.collisionCoefficientNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomVelocityScaleUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.integrationStepNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.angularVelocityNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeDeviationNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeDensityNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeEdgeLengthNumericUpDown)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -572,6 +662,12 @@ namespace Geometric2
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Button shakeButton;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown collisionCoefficientNumericUpDown;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.RadioButton collisionModel_Model2;
+        private System.Windows.Forms.RadioButton collisionModel_Model1;
     }
 }
 

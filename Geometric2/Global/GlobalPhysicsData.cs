@@ -27,13 +27,17 @@ namespace Geometric2.Global
         //Data from user
         public bool gravityOn = false;
 
-        //new physics data
+        //Physics data
         public float ControlPointMass = 0.1f;
         public float SpringStiffness = 200.0f;
         public float FrictionCoefficient = 1.0f;
         public float ControlSpringStiffness = 1000.0f;
         public float RandomVelocityScale = 0.0f;
 
+        //Collisions
+        public CollisionType CollisionType = CollisionType.Elastic;
+        public CollisionModel CollisionModel = CollisionModel.Model1;
+        public float CollisionCoefficient = 1.0f;
 
         public void InitializeControlPoints(Camera camera)
         {
@@ -92,5 +96,24 @@ namespace Geometric2.Global
                 controlFramePointsPositions[i] = controlPoints[controlFramePointsIndices[i]];
             }
         }
+    }
+
+    public enum CollisionType
+    {
+        Elastic,
+        Inelastic
+    }
+
+    public enum CollisionModel
+    {
+        /// <summary>
+        /// When colliding with plane x=0 velocity changes from (v_x, v_y, v_z) to u*(-v_x, v_y, v_z)
+        /// </summary>
+        Model1,
+
+        /// <summary>
+        /// When colliding with plane x=0 velocity changes from (v_x, v_y, v_z) to (-u*v_x, v_y, v_z)
+        /// </summary>
+        Model2
     }
 }
