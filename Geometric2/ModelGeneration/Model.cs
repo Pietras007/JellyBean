@@ -124,16 +124,19 @@ namespace Geometric2.ModelGeneration
             List<float> tempPoints = new List<float>();
             foreach (var p in points)
             {
-                var resultPoints = evaluate(p.Item1);
+                var resultPoints = Evaluate(p.Item1);
                 tempPoints.Add(resultPoints.X);
                 tempPoints.Add(resultPoints.Y);
                 tempPoints.Add(resultPoints.Z);
-                //tempPoints.Add(p.Item2.X);
-                //tempPoints.Add(p.Item2.Y);
-                //tempPoints.Add(p.Item2.Z);
-                tempPoints.Add(0);
-                tempPoints.Add(0);
-                tempPoints.Add(0);
+
+                var resultPointsOfBiggerModel = Evaluate(p.Item1 + 0.1f * p.Item2);
+                var norm = (resultPointsOfBiggerModel - resultPoints).Normalized();
+                tempPoints.Add(norm.X);
+                tempPoints.Add(norm.Y);
+                tempPoints.Add(norm.Z);
+                //tempPoints.Add(0);
+                //tempPoints.Add(0);
+                //tempPoints.Add(0);
                 tempPoints.Add(0.5f);
                 tempPoints.Add(0.5f);
             }
@@ -150,7 +153,7 @@ namespace Geometric2.ModelGeneration
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
         }
 
-        private Vector3 evaluate(Vector3 uvw)
+        private Vector3 Evaluate(Vector3 uvw)
         {
             float u = uvw.Y;
             float v = uvw.X;
@@ -168,8 +171,7 @@ namespace Geometric2.ModelGeneration
             float w2 = 3.0f * w * w * (1.0f - w);
             float w3 = w * w * w;
 
-            return
-            w0 *
+            return w0 *
             (u0 * (v0 * p[0][0][0] + v1 * p[0][0][1] + v2 * p[0][0][2] + v3 * p[0][0][3])
             + u1 * (v0 * p[0][1][0] + v1 * p[0][1][1] + v2 * p[0][1][2] + v3 * p[0][1][3])
             + u2 * (v0 * p[0][2][0] + v1 * p[0][2][1] + v2 * p[0][2][2] + v3 * p[0][2][3])
