@@ -106,8 +106,7 @@ namespace Geometric2.ModelGeneration
                 _shaderLight.Use();
 
                 RotationQuaternion = CreateModelMatrix.GetQuaternionFromPhysicsData(globalPhysicsData);
-                var cubeSize = (float)globalPhysicsData.InitialConditionsData.cubeEdgeLength;
-                Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(cubeSize, cubeSize, cubeSize), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
+                Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(1.0f,1.0f,1.0f), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
                 _shaderLight.SetMatrix4("model", model);
                 _shaderLight.SetInt("transparent", 1);
                 GL.BindVertexArray(cubeVAO);

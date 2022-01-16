@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using Geometric2.RasterizationClasses;
-using Geometric2.ModelGeneration;
-using OpenTK;
+﻿using Geometric2.Global;
 using Geometric2.Helpers;
+using Geometric2.ModelGeneration;
+using Geometric2.RasterizationClasses;
+using OpenTK;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using Geometric2.Global;
 using Geometric2.Physics;
 
@@ -36,13 +37,10 @@ namespace Geometric2
         private void Form1_Load(object sender, EventArgs e)
         {
             cameraLightCheckBox.Checked = true;
-
-            InitializePhysicsData();
         }
 
         private Thread SimulationThread = null;
         private Thread PointListThread = null;
-        private InitialConditionsData temporaryConditionsData = new InitialConditionsData();
 
         private Shader _shaderLight;
         private Shader _shader;
@@ -51,7 +49,6 @@ namespace Geometric2
 
         private XyzLines xyzLines = new XyzLines();
         private Cube cube = new Cube();
-        private Plane plane = new Plane();
         private List<Element> Elements = new List<Element>();
         private Lines diagonalLine = new Lines();
         private Lines cubeLines = new Lines();
@@ -106,11 +103,6 @@ namespace Geometric2
             globalPhysicsData.displayControlPoints = displayControlPointsCheckBox.Checked;
         }
 
-        private void pathLengthUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            globalPhysicsData.numberOfPointsToShow = (int)pathLengthUpDown.Value;
-        }
-
         private void gravityOnCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             globalPhysicsData.gravityOn = gravityOnCheckBox.Checked;
@@ -160,88 +152,32 @@ namespace Geometric2
 
         private void applyConditionsButton_Click(object sender, EventArgs e)
         {
-            globalPhysicsData.InitialConditionsData = temporaryConditionsData;
-            temporaryConditionsData = new InitialConditionsData();
-            temporaryConditionsData.cubeEdgeLength = (double)cubeEdgeLengthNumericUpDown.Value;
-            temporaryConditionsData.cubeDensity = (double)cubeDensityNumericUpDown.Value;
-            temporaryConditionsData.cubeDeviationRadian = (Math.PI / 180) * (double)cubeDeviationNumericUpDown.Value;
-            temporaryConditionsData.angularVelocityRadian = (Math.PI / 180) * (double)angularVelocityNumericUpDown.Value;
-            temporaryConditionsData.integrationStep = (float)integrationStepNumericUpDown.Value;
-
-            InitializePhysicsData();
         }
 
         private void cubeEdgeLengthNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            temporaryConditionsData.cubeEdgeLength = (double)cubeEdgeLengthNumericUpDown.Value;
+            globalPhysicsData.pointMass = (float)cubeEdgeLengthNumericUpDown.Value;
         }
 
         private void cubeDensityNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            temporaryConditionsData.cubeDensity = (double)cubeDensityNumericUpDown.Value;
+            globalPhysicsData.resilience_c1 = (float)cubeDensityNumericUpDown.Value;
         }
 
         private void cubeDeviationNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            temporaryConditionsData.cubeDeviationRadian = (Math.PI / 180) * (double)cubeDeviationNumericUpDown.Value;
+            globalPhysicsData.tenacityRate_k = (float)cubeDeviationNumericUpDown.Value;
         }
 
         private void angularVelocityNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            temporaryConditionsData.angularVelocityRadian = (Math.PI / 180) * (double)angularVelocityNumericUpDown.Value;
+            globalPhysicsData.resilience_c2 = (float)angularVelocityNumericUpDown.Value;
         }
 
         private void integrationStepNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            temporaryConditionsData.integrationStep = (float)integrationStepNumericUpDown.Value;
+            globalPhysicsData.integrationStep = (float)integrationStepNumericUpDown.Value;
         }
-
-        private void InitializePhysicsData()
-        {
-            controlFrame = new ControlFrame();
-            controlFrame.Initialize(globalPhysicsData.ControlPointMass);
-        }
-
-        private static PhysicsStepData GetInitialPhysicsStepData(GlobalPhysicsData data)
-        {
-            PhysicsStepData physicsStepData = new PhysicsStepData();
-            physicsStepData.quaternion = Quaterniond.FromEulerAngles(0, 0, data.InitialConditionsData.cubeDeviationRadian).Normalized();//changed order of angles due to some issue
-            physicsStepData.angularVelocity = data.InitialConditionsData.angularVelocityRadian * Vector3d.UnitY;
-
-            return physicsStepData;
-        }
-
-        private struct PhysicsStepData
-        {
-            public Quaterniond quaternion;
-            public Vector3d angularVelocity;
-        }
-        private static Vector3d CalculateN(GlobalPhysicsData globalPhysicsData, ref Quaterniond quaternion)
-        {
-            var N = Vector3d.Zero;
-            if (globalPhysicsData.gravityOn)
-            {
-                var gravityRotated = (Quaterniond.Conjugate(quaternion) * globalPhysicsData.gravitationQuaternion * quaternion).Xyz;
-                gravityRotated *= globalPhysicsData.InitialConditionsData.mass;
-                N = Vector3d.Cross(globalPhysicsData.InitialConditionsData.massCentre, gravityRotated);
-            }
-            return N;
-        }
-
-        private static Vector3d CalculateW(Vector3d N, Vector3d I, Vector3d W)
-        {
-            double W_X = ((N.X + (I.Y - I.Z) * W.Y * W.Z) / I.X);
-            double W_Y = ((N.Y + (I.Z - I.X) * W.X * W.Z) / I.Y);
-            double W_Z = ((N.Z + (I.X - I.Y) * W.X * W.Y) / I.Z);
-            return new Vector3d(W_X, W_Y, W_Z);
-        }
-
-        private static Quaterniond CalculateQ(Vector3d W, Quaterniond Q)
-        {
-            return 0.5 * Q * new Quaterniond(W, 0);
-        }
-
-        private PhysicsStepData physicsStepData;
 
         private ControlFrame controlFrame;
 
@@ -251,7 +187,7 @@ namespace Geometric2
             {
                 while (isProgramWorking)
                 {
-                    long nanosecondsToWait = (long)(globalPhysicsData.InitialConditionsData.integrationStep * 1000_000_000);
+                    long nanosecondsToWait = (long)(globalPhysicsData.integrationStep * 1000_000_000);
                     long nanoPrev = 10000L * Stopwatch.GetTimestamp();
                     nanoPrev /= TimeSpan.TicksPerMillisecond;
                     nanoPrev *= 100L;
@@ -285,35 +221,6 @@ namespace Geometric2
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             isProgramWorking = false;
-        }
-
-
-        private void DrawPath()
-        {
-            PointListThread = new Thread(() =>
-            {
-                var topPoint = new Vector3(0, (float)Math.Sqrt(3), 0);
-                var topPointInModelSpace = new Vector4(topPoint, 1.0f) * CreateModelMatrix.CreateMatrixForPoint(globalPhysicsData);
-                List<Vector3> newPointList = new List<Vector3>();
-                for (int i = 0; i < 1000_000; i++)
-                {
-                    newPointList.Add(new Vector3(topPointInModelSpace));
-                }
-
-                lock (globalPhysicsData.lockPathPointsList)
-                {
-                    pathLines.linePointsList = newPointList;
-                }
-
-                while (isProgramWorking)
-                {
-                    topPointInModelSpace = new Vector4(topPoint, 1.0f) * CreateModelMatrix.CreateMatrixForPoint(globalPhysicsData);
-                    pathLines.linePointsList.Add(new Vector3(topPointInModelSpace));
-                    Thread.Sleep(10);
-                }
-            });
-
-            PointListThread.Start();
         }
     }
 }
