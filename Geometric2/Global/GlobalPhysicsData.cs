@@ -24,9 +24,6 @@ namespace Geometric2.Global
         public bool displayBezierCube = true;
         public bool displayDisortBox = true;
 
-        //Data from user
-        public bool gravityOn = false;
-
         //Physics data
         public float ControlPointMass = 0.1f;
         public float SpringStiffness = 200.0f;

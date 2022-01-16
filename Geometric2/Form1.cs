@@ -106,11 +106,6 @@ namespace Geometric2
             globalPhysicsData.displayControlPoints = displayControlPointsCheckBox.Checked;
         }
 
-        private void gravityOnCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            globalPhysicsData.gravityOn = gravityOnCheckBox.Checked;
-        }
-
         private void cubeEdgeLengthNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             globalPhysicsData.ControlPointMass = (float)cubeEdgeLengthNumericUpDown.Value;
