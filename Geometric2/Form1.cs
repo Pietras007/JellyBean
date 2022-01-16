@@ -4,8 +4,10 @@ using Geometric2.RasterizationClasses;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Geometric2.Models;
 using Geometric2.Physics;
 using OpenTK;
 
@@ -37,6 +39,8 @@ namespace Geometric2
         {
             cameraLightCheckBox.Checked = true;
             StartSimulation();
+
+            var model = ModelReader.ReadObjModelFromFile(@"../../../ModelsData/bunny.obj");
         }
 
         private Thread SimulationThread = null;
