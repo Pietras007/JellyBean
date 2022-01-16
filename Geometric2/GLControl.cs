@@ -41,16 +41,18 @@ namespace Geometric2
         {
             _camera = new Camera(new Vector3(0, 5, 15), glControl1.Width / (float)glControl1.Height);
             Generate();
+            Elements.Add(cube);
             Elements.Add(xyzLines);
             foreach (var p in globalPhysicsData.points)
             {
                 Elements.Add(p);
             }
-            Elements.Add(cube);
+
             cube.first_globalPhysicsData = globalPhysicsData;
             Elements.Add(boxLines);
             Elements.Add(controlFrameLines);
             Elements.Add(controlPointLines);
+
             GL.ClearColor(Color.LightCyan);
             GL.Enable(EnableCap.DepthTest);
             _shader = new Shader("./../../../Shaders/VertexShaderLines.vert", "./../../../Shaders/FragmentShaderLines.frag");
