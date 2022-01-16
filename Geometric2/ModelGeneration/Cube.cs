@@ -104,8 +104,6 @@ namespace Geometric2.ModelGeneration
             //if (globalPhysicsData.displayWalls)
             {
                 _shaderLight.Use();
-
-                RotationQuaternion = CreateModelMatrix.GetQuaternionFromPhysicsData(globalPhysicsData);
                 Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(1.0f,1.0f,1.0f), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
                 _shaderLight.SetMatrix4("model", model);
                 _shaderLight.SetInt("transparent", 1);

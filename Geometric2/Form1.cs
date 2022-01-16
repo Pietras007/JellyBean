@@ -158,24 +158,23 @@ namespace Geometric2
 
         private void cubeEdgeLengthNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            globalPhysicsData.pointMass = (float)cubeEdgeLengthNumericUpDown.Value;
             globalPhysicsData.ControlPointMass = (float)cubeEdgeLengthNumericUpDown.Value;
             controlFrame?.UpdateMass(globalPhysicsData.ControlPointMass);
         }
 
         private void cubeDensityNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            globalPhysicsData.resilience_c1 = (float)cubeDensityNumericUpDown.Value;
+            globalPhysicsData.SpringStiffness = (float)cubeDensityNumericUpDown.Value;
         }
 
         private void cubeDeviationNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            globalPhysicsData.tenacityRate_k = (float)cubeDeviationNumericUpDown.Value;
+            globalPhysicsData.FrictionCoefficient = (float)cubeDeviationNumericUpDown.Value;
         }
 
         private void angularVelocityNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            globalPhysicsData.resilience_c2 = (float)angularVelocityNumericUpDown.Value;
+            globalPhysicsData.ControlSpringStiffness = (float)angularVelocityNumericUpDown.Value;
         }
 
         private void integrationStepNumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -229,6 +228,20 @@ namespace Geometric2
             SimulationThread.Start();
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            globalPhysicsData.RandomVelocityScale = (float)randomVelocityScaleUpDown1.Value;
+        }
+
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+
+        }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             isProgramWorking = false;
