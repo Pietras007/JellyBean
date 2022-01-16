@@ -7,6 +7,8 @@ namespace Geometric2.Global
     public class GlobalPhysicsData
     {
         public Point[] points = new Point[64];
+        public Vector3[] controlFramePointsPositions = new Vector3[8];
+
         public Vector3 Translation = new Vector3(0, 0, 0);
         //Help
         public object lockPathPointsList = new object { };
@@ -16,7 +18,7 @@ namespace Geometric2.Global
         public float resilience_c1;
         public float resilience_c2;
         public float tenacityRate_k;
-        public float integrationStep;
+        public float integrationStep = 0.001f;
 
         //Visualization Settings
         public bool displayControlPoints = true;
@@ -46,5 +48,6 @@ namespace Geometric2.Global
         public float ControlSpringStiffness = 10.0f;
         public float FrictionCoefficient = 1.0f;
         public float ControlPointMass = 1.0f;
+        public float RandomVelocityScale = 0.0f;
     }
 }

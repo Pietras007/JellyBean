@@ -29,10 +29,7 @@ namespace Geometric2.ModelGeneration
                 GenerateOnlyPoints();
             }
 
-            if (IsControlFrame)
-            {
-                GenerateControlFramePoints(null, new Vector3(0,0,0));
-            }
+            GenerateControlFramePoints(null, new Vector3(0, 0, 0), IsControlFrame);
 
             _shader.Use();
             var a_Position_Location = _shader.GetAttribLocation("a_Position");
@@ -60,6 +57,10 @@ namespace Geometric2.ModelGeneration
                 GenerateControlFramePoints(globalPhysicsData, globalPhysicsData.Translation);
                 FillLineGeometry();
                 RenderWithColor(_shader, Color.Black, rotationCentre);
+            }
+            else
+            {
+                GenerateControlFramePoints(globalPhysicsData, globalPhysicsData.Translation, false);
             }
 
             if (IsControlPoints && globalPhysicsData.displayControlPoints)
@@ -90,7 +91,7 @@ namespace Geometric2.ModelGeneration
             GL.BufferData(BufferTarget.ElementArrayBuffer, linesIndices.Length * sizeof(uint), linesIndices, BufferUsageHint.DynamicDraw);
         }
 
-        private void GenerateControlFramePoints(GlobalPhysicsData globalPhysicsData, Vector3 translation)
+        private void GenerateControlFramePoints(GlobalPhysicsData globalPhysicsData, Vector3 translation, bool draw = true)
         {
             if (globalPhysicsData != null)
             {
@@ -118,10 +119,17 @@ namespace Geometric2.ModelGeneration
                 linePointsList.Add(globalPhysicsData.points[60].Position());//14
                 linePointsList.Add(globalPhysicsData.points[63].Position());//15
 
-                GenerateOnlyPoints();
-                linesIndices = new uint[] { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7,
-                    0, 8, 1, 9, 4, 10, 5, 11, 2, 13, 3, 12, 6, 15, 7, 14
-                };
+                MapControlFramePointsPositions(globalPhysicsData, linePointsList);
+
+                if (draw)
+                {
+                    GenerateOnlyPoints();
+                    linesIndices = new uint[]
+                    {
+                        0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7,
+                        0, 8, 1, 9, 4, 10, 5, 11, 2, 13, 3, 12, 6, 15, 7, 14
+                    };
+                }
             }
         }
 
@@ -191,6 +199,18 @@ namespace Geometric2.ModelGeneration
 
                 linesIndices = indices.ToArray();
             }
+        }
+
+        private void MapControlFramePointsPositions(GlobalPhysicsData globalPhysicsData, List<Vector3> controlFramePointsPositions)
+        {
+            globalPhysicsData.controlFramePointsPositions[0] = linePointsList[0];
+            globalPhysicsData.controlFramePointsPositions[1] = linePointsList[1];
+            globalPhysicsData.controlFramePointsPositions[2] = linePointsList[4];
+            globalPhysicsData.controlFramePointsPositions[3] = linePointsList[5];
+            globalPhysicsData.controlFramePointsPositions[4] = linePointsList[3];
+            globalPhysicsData.controlFramePointsPositions[5] = linePointsList[2];
+            globalPhysicsData.controlFramePointsPositions[6] = linePointsList[7];
+            globalPhysicsData.controlFramePointsPositions[7] = linePointsList[6];
         }
     }
 }

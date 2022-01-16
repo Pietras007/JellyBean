@@ -39,13 +39,14 @@ namespace Geometric2
 
             List<Vector3> controlPoints = new List<Vector3>();
             var x = ConfigurationData.ControlFrameCubeEdgeLength / 2.0f;
+            var deltaX = ConfigurationData.ControlFrameCubeEdgeLength / 3.0f;
             for (int i = 0; i < 4; i++)
             {
                 for(int j = 0; j < 4; j++)
                 {
                     for(int k = 0; k < 4; k++)
                     {
-                        controlPoints.Add(new Vector3(-x + i, -x + j, -x + k));
+                        controlPoints.Add(new Vector3(-x + i * deltaX, -x + j * deltaX, -x + k * deltaX));
                     }
                 }
             }

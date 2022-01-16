@@ -36,5 +36,10 @@ namespace Geometric2.Physics
             LastData = Data;
             Data = PointData.Zero;
         }
+
+        public override string ToString()
+        {
+            return $"LastData: {LastData.Position}, Data: {Data.Position}, Mass: {Mass}";
+        }
     }
 }

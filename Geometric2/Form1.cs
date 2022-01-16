@@ -28,11 +28,15 @@ namespace Geometric2
 
             thread.Start();
             this.glControl1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseWheel);
+
+            controlFrame = new ControlFrame();
+            controlFrame.Initialize(globalPhysicsData.ControlPointMass, globalPhysicsData.RandomVelocityScale);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             cameraLightCheckBox.Checked = true;
+            StartSimulation();
         }
 
         private Thread SimulationThread = null;
@@ -56,6 +60,8 @@ namespace Geometric2
 
         int prev_xPosMouse = -1, prev_yPosMouse = -1;
         GlobalPhysicsData globalPhysicsData = new GlobalPhysicsData();
+
+        private ControlFrame controlFrame;
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -104,7 +110,7 @@ namespace Geometric2
             globalPhysicsData.gravityOn = gravityOnCheckBox.Checked;
         }
 
-        private void startSimulationButton_Click(object sender, EventArgs e)
+        private void StartSimulation()
         {
 
             ////TODO: insert start here
@@ -153,6 +159,8 @@ namespace Geometric2
         private void cubeEdgeLengthNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             globalPhysicsData.pointMass = (float)cubeEdgeLengthNumericUpDown.Value;
+            globalPhysicsData.ControlPointMass = (float)cubeEdgeLengthNumericUpDown.Value;
+            controlFrame?.UpdateMass(globalPhysicsData.ControlPointMass);
         }
 
         private void cubeDensityNumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -175,8 +183,6 @@ namespace Geometric2
             globalPhysicsData.integrationStep = (float)integrationStepNumericUpDown.Value;
         }
 
-        private ControlFrame controlFrame;
-
         private void GlobalCalculationFunction()
         {
             SimulationThread = new Thread(() =>
@@ -190,11 +196,20 @@ namespace Geometric2
 
                     var deltaTime = globalPhysicsData.integrationStep;
 
+                    controlFrame.UpdateControlFramePointsPositions(globalPhysicsData.controlFramePointsPositions);
+
                     controlFrame.CalculateNextStep(
                         deltaTime,
                         globalPhysicsData.SpringStiffness,
                         globalPhysicsData.ControlSpringStiffness,
                         globalPhysicsData.FrictionCoefficient);
+
+                    var positions = controlFrame.GetControlPointsPositions();
+
+                    for (int i = 0; i < globalPhysicsData.points.Length; i++)
+                    {
+                        globalPhysicsData.points[i].CenterPosition = positions[i];
+                    }
 
                     //wait for remaining time to pass
                     long nanoPost;

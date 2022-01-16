@@ -19,9 +19,11 @@ namespace Geometric2.Physics
         /// </summary>
         public Spring[] ControlSprings;
 
-        public void Initialize(float mass)
+        private static Random _random = new Random();
+
+        public void Initialize(float mass, float randomVelocityScale)
         {
-            ControlPoints = GenerateControlPoints(mass);
+            ControlPoints = GenerateControlPoints(mass, randomVelocityScale);
             ControlFramePoints = GenerateControlFramePoints(ControlPoints);
             Springs = GenerateSprings(ControlPoints);
             ControlSprings = GenerateControlSprings(ControlFramePoints, ControlPoints);
@@ -34,11 +36,10 @@ namespace Geometric2.Physics
                 spring.CalculateNextForce(springStiffness);
             }
 
-            //TODO: uncomment later
-            //foreach (var spring in ControlSprings)
-            //{
-            //    spring.CalculateNextForce(controlSpringStiffness);
-            //}
+            foreach (var spring in ControlSprings)
+            {
+                spring.CalculateNextForce(controlSpringStiffness);
+            }
 
             foreach (var point in ControlPoints)
             {
@@ -59,13 +60,13 @@ namespace Geometric2.Physics
         {
             for (int i = 0; i < ControlFramePoints.Length; i++)
             {
-                ControlFramePoints[i].Data.Position = positions[i];
+                ControlFramePoints[i].LastData.Position = positions[i];
             }
         }
 
         public Vector3[] GetControlPointsPositions()
         {
-            return ControlPoints.Select(point => point.Data.Position).ToArray();
+            return ControlPoints.Select(point => point.LastData.Position).ToArray();
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Geometric2.Physics
         /// </summary>
         public static readonly int[] ControlFramePointsIndices = { 0, 3, 12, 15, 48, 51, 60, 63 };
 
-        public static ControlPoint[] GenerateControlPoints(float mass)
+        public static ControlPoint[] GenerateControlPoints(float mass, float randomVelocityScale)
         {
             var externalVertexPosition = -ConfigurationData.ControlFrameCubeEdgeLength / 2.0f;
             var deltaVertexPosition = ConfigurationData.ControlFrameCubeEdgeLength / 3.0f;
@@ -88,7 +89,7 @@ namespace Geometric2.Physics
                             externalVertexPosition + i * deltaVertexPosition,
                             externalVertexPosition + j * deltaVertexPosition,
                             externalVertexPosition + k * deltaVertexPosition);
-                        var velocity = CalculateInitialVelocity();
+                        var velocity = CalculateInitialVelocity(randomVelocityScale);
                         controlPoints.Add(new ControlPoint(position, velocity, mass));
                     }
                 }
@@ -97,9 +98,12 @@ namespace Geometric2.Physics
             return controlPoints.ToArray();
         }
 
-        public static Vector3 CalculateInitialVelocity()
+        public static Vector3 CalculateInitialVelocity(float scale)
         {
-            return Vector3.Zero;
+            var x = (float)_random.NextDouble() * 2f - 1f;
+            var y = (float)_random.NextDouble() * 2f - 1f;
+            var z = (float)_random.NextDouble() * 2f - 1f;
+            return new Vector3(x, y, z) * scale;
         }
 
         public static Spring[] GenerateSprings(ControlPoint[] controlPoints)
