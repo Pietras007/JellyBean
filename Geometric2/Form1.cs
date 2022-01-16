@@ -109,28 +109,6 @@ namespace Geometric2
             globalPhysicsData.gravityOn = gravityOnCheckBox.Checked;
         }
 
-        private void StartSimulation()
-        {
-            if (SimulationThread != null)
-            {
-                SimulationThread.Abort();
-            }
-
-            this.GlobalCalculationFunction();
-        }
-
-        private void EndSimulation()
-        {
-            if (SimulationThread != null)
-            {
-                SimulationThread.Abort();
-            }
-        }
-
-        private void applyConditionsButton_Click(object sender, EventArgs e)
-        {
-        }
-
         private void cubeEdgeLengthNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             globalPhysicsData.ControlPointMass = (float)cubeEdgeLengthNumericUpDown.Value;
@@ -152,9 +130,75 @@ namespace Geometric2
             globalPhysicsData.ControlSpringStiffness = (float)angularVelocityNumericUpDown.Value;
         }
 
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            globalPhysicsData.RandomVelocityScale = (float)randomVelocityScaleUpDown1.Value;
+        }
+
         private void integrationStepNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             globalPhysicsData.integrationStep = (float)integrationStepNumericUpDown.Value;
+        }
+
+        private void collisionCoefficientNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            globalPhysicsData.CollisionCoefficient = (float)collisionCoefficientNumericUpDown.Value;
+        }
+
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+            EndSimulation();
+
+            globalPhysicsData.Translation = Vector3.Zero;
+            globalPhysicsData.ResetControlPointsPositions();
+            controlFrame = new ControlFrame(globalPhysicsData.ControlPointMass, globalPhysicsData.RandomVelocityScale);
+
+            StartSimulation();
+        }
+
+        private void shakeButton_Click(object sender, EventArgs e)
+        {
+            controlFrame?.ShakeCube(globalPhysicsData.RandomVelocityScale);
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            isProgramWorking = false;
+        }
+
+        private void collisionModel_Model1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (collisionModel_Model1.Checked && globalPhysicsData.CollisionModel != CollisionModel.Model1)
+            {
+                globalPhysicsData.CollisionModel = CollisionModel.Model1;
+            }
+        }
+
+        private void collisionModel_Model2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (collisionModel_Model2.Checked && globalPhysicsData.CollisionModel != CollisionModel.Model2)
+            {
+                globalPhysicsData.CollisionModel = CollisionModel.Model2;
+            }
+        }
+
+
+        private void StartSimulation()
+        {
+            if (SimulationThread != null)
+            {
+                SimulationThread.Abort();
+            }
+
+            this.GlobalCalculationFunction();
+        }
+
+        private void EndSimulation()
+        {
+            if (SimulationThread != null)
+            {
+                SimulationThread.Abort();
+            }
         }
 
         private void GlobalCalculationFunction()
@@ -172,11 +216,7 @@ namespace Geometric2
 
                     controlFrame.UpdateControlFramePointsPositions(globalPhysicsData.controlFramePointsPositions);
 
-                    controlFrame.CalculateNextStep(
-                        deltaTime,
-                        globalPhysicsData.SpringStiffness,
-                        globalPhysicsData.ControlSpringStiffness,
-                        globalPhysicsData.FrictionCoefficient);
+                    controlFrame.CalculateNextStep(globalPhysicsData);
 
                     var positions = controlFrame.GetControlPointsPositions();
 
@@ -201,37 +241,6 @@ namespace Geometric2
             });
 
             SimulationThread.Start();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-            globalPhysicsData.RandomVelocityScale = (float)randomVelocityScaleUpDown1.Value;
-        }
-
-        private void resetButton_Click(object sender, EventArgs e)
-        {
-            EndSimulation();
-
-            globalPhysicsData.Translation = Vector3.Zero;
-            globalPhysicsData.ResetControlPointsPositions();
-            controlFrame = new ControlFrame(globalPhysicsData.ControlPointMass, globalPhysicsData.RandomVelocityScale);
-
-            StartSimulation();
-        }
-
-        private void shakeButton_Click(object sender, EventArgs e)
-        {
-            controlFrame?.ShakeCube(globalPhysicsData.RandomVelocityScale);
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            isProgramWorking = false;
         }
     }
 }

@@ -12,6 +12,8 @@ namespace Geometric2.Physics
 
         public ControlPoint[] ControlFramePoints;
 
+        public Vector3 CollisionFrameBoundary;
+
         public Spring[] Springs;
 
         /// <summary>
@@ -27,9 +29,33 @@ namespace Geometric2.Physics
             ControlFramePoints = GenerateControlFramePoints(ControlPoints);
             Springs = GenerateSprings(ControlPoints);
             ControlSprings = GenerateControlSprings(ControlFramePoints, ControlPoints);
+            var collisionBoxEdgeLengthX = ConfigurationData.CollisionBoxEdgeLength / 2f;
+            CollisionFrameBoundary = new Vector3(collisionBoxEdgeLengthX);
         }
 
-        public void CalculateNextStep(float deltaTime, float springStiffness, float controlSpringStiffness, float frictionCoefficient)
+        public void CalculateNextStep(GlobalPhysicsData globalPhysicsData)
+        {
+            if (globalPhysicsData == null)
+                return;
+
+            CalculateNextStep(
+                globalPhysicsData.integrationStep,
+                globalPhysicsData.SpringStiffness,
+                globalPhysicsData.ControlSpringStiffness,
+                globalPhysicsData.FrictionCoefficient,
+                globalPhysicsData.CollisionType,
+                globalPhysicsData.CollisionModel,
+                globalPhysicsData.CollisionCoefficient);
+        }
+
+        public void CalculateNextStep(
+            float deltaTime,
+            float springStiffness,
+            float controlSpringStiffness,
+            float frictionCoefficient,
+            CollisionType collisionType,
+            CollisionModel collisionModel,
+            float collisionCoefficient)
         {
             foreach (var spring in Springs)
             {
@@ -46,6 +72,8 @@ namespace Geometric2.Physics
                 point.ApplyFriction(frictionCoefficient);
                 point.CalculateNextStep(deltaTime);
             }
+
+            CalculateCollisions(collisionType, collisionModel, collisionCoefficient);
         }
 
         public void UpdateMass(float mass)
@@ -75,6 +103,108 @@ namespace Geometric2.Physics
             {
                 point.LastData.Velocity += CalculateRandomVelocity(randomVelocityScale);
             }
+        }
+
+        private void CalculateCollisions(CollisionType collisionType, CollisionModel collisionModel, float collisionCoefficient)
+        {
+            switch (collisionType)
+            {
+                case CollisionType.Elastic:
+                    CalculateElasticCollisions(collisionModel, collisionCoefficient);
+                    break;
+                case CollisionType.Inelastic:
+                    CalculateInelasticCollisions(collisionModel, collisionCoefficient);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(collisionType), collisionType, null);
+            }
+        }
+
+        private void CalculateElasticCollisions(CollisionModel collisionModel, float collisionCoefficient)
+        {
+            foreach (var point in ControlPoints)
+            {
+                var collision = true;
+                while (collision)
+                {
+                    collision = false;
+                    //x lower bound is crossed
+                    if (point.LastData.Position.X < -CollisionFrameBoundary.X)
+                    {
+                        collision = true;
+
+                        point.LastData.Position.X = -CollisionFrameBoundary.X;
+                        point.LastData.Velocity = CalculateVelocityAfterElasticCollision(collisionModel, point.LastData.Velocity, 0, collisionCoefficient);
+                    }
+
+                    //x upper bound is crossed
+                    if (point.LastData.Position.X > CollisionFrameBoundary.X)
+                    {
+                        collision = true;
+
+                        point.LastData.Position.X = CollisionFrameBoundary.X;
+                        point.LastData.Velocity = CalculateVelocityAfterElasticCollision(collisionModel, point.LastData.Velocity, 0, collisionCoefficient);
+                    }
+
+                    //y lower bound is crossed
+                    if (point.LastData.Position.Y < -CollisionFrameBoundary.Y)
+                    {
+                        collision = true;
+
+                        point.LastData.Position.Y = -CollisionFrameBoundary.Y;
+                        point.LastData.Velocity = CalculateVelocityAfterElasticCollision(collisionModel, point.LastData.Velocity, 1, collisionCoefficient);
+                    }
+
+                    //y upper bound is crossed
+                    if (point.LastData.Position.Y > CollisionFrameBoundary.Y)
+                    {
+                        collision = true;
+
+                        point.LastData.Position.Y = CollisionFrameBoundary.Y;
+                        point.LastData.Velocity = CalculateVelocityAfterElasticCollision(collisionModel, point.LastData.Velocity, 1, collisionCoefficient);
+                    }
+
+                    //z lower bound is crossed
+                    if (point.LastData.Position.Z < -CollisionFrameBoundary.Z)
+                    {
+                        collision = true;
+
+                        point.LastData.Position.Z = -CollisionFrameBoundary.Z;
+                        point.LastData.Velocity = CalculateVelocityAfterElasticCollision(collisionModel, point.LastData.Velocity, 2, collisionCoefficient);
+                    }
+
+                    //z upper bound is crossed
+                    if (point.LastData.Position.Z > CollisionFrameBoundary.Z)
+                    {
+                        collision = true;
+
+                        point.LastData.Position.Z = CollisionFrameBoundary.Z;
+                        point.LastData.Velocity = CalculateVelocityAfterElasticCollision(collisionModel, point.LastData.Velocity, 2, collisionCoefficient);
+                    }
+                }
+            }
+        }
+
+        private Vector3 CalculateVelocityAfterElasticCollision(CollisionModel collisionModel, Vector3 initialVelocity, int index, float collisionCoefficient)
+        {
+            switch (collisionModel)
+            {
+                case CollisionModel.Model1:
+                    initialVelocity[index] = -initialVelocity[index];
+                    initialVelocity *= collisionCoefficient;
+                    break;
+                case CollisionModel.Model2:
+                    initialVelocity[index] = -collisionCoefficient * initialVelocity[index];
+                    break;
+            }
+
+            return initialVelocity;
+        }
+
+        private void CalculateInelasticCollisions(CollisionModel collisionModel, float collisionCoefficient)
+        {
+            //TODO: verify
+            CalculateElasticCollisions(collisionModel, collisionCoefficient);
         }
 
         /// <summary>

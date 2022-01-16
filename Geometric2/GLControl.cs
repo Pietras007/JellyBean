@@ -14,17 +14,18 @@ namespace Geometric2
     {
         private void Generate()
         {
+            var collisionBoxEdgeLengthX = ConfigurationData.CollisionBoxEdgeLength / 2f;
             List<Vector3> boxPoints = new List<Vector3>()
             {
-                new Vector3(-5f, -5f, -5f),
-                new Vector3(-5f, -5f, 5f),
-                new Vector3(5f, -5f, 5f),
-                new Vector3(5f, -5f, -5f),
+                new Vector3(-collisionBoxEdgeLengthX, -collisionBoxEdgeLengthX, -collisionBoxEdgeLengthX),
+                new Vector3(-collisionBoxEdgeLengthX, -collisionBoxEdgeLengthX, collisionBoxEdgeLengthX),
+                new Vector3(collisionBoxEdgeLengthX, -collisionBoxEdgeLengthX, collisionBoxEdgeLengthX),
+                new Vector3(collisionBoxEdgeLengthX, -collisionBoxEdgeLengthX, -collisionBoxEdgeLengthX),
 
-                new Vector3(-5f, 5f, -5f),
-                new Vector3(-5f, 5f, 5f),
-                new Vector3(5f, 5f, 5f),
-                new Vector3(5f, 5f, -5f)
+                new Vector3(-collisionBoxEdgeLengthX, collisionBoxEdgeLengthX, -collisionBoxEdgeLengthX),
+                new Vector3(-collisionBoxEdgeLengthX, collisionBoxEdgeLengthX, collisionBoxEdgeLengthX),
+                new Vector3(collisionBoxEdgeLengthX, collisionBoxEdgeLengthX, collisionBoxEdgeLengthX),
+                new Vector3(collisionBoxEdgeLengthX, collisionBoxEdgeLengthX, -collisionBoxEdgeLengthX)
             };
 
             boxLines.IsBox = true;
@@ -159,7 +160,7 @@ namespace Geometric2
                     Vector3 currentMousePos = GetCoursorGlobalPosition((xPosMouse, yPosMouse), viewMatrix, projectionMatrix, _camera);
                     Vector3 mouseMove = currentMousePos - prevMousePos;
                     globalPhysicsData.Translation += mouseMove;
-                    var clampTransl = ConfigurationData.BoxEdgeLen / 2 + ConfigurationData.ControlFrameCanGoOutBoxFor;
+                    var clampTransl = ConfigurationData.CollisionBoxEdgeLength / 2 + ConfigurationData.ControlFrameCanGoOutBoxFor;
                     globalPhysicsData.Translation.X = clamp(globalPhysicsData.Translation.X, -clampTransl, clampTransl);
                     globalPhysicsData.Translation.Y = clamp(globalPhysicsData.Translation.Y, -clampTransl, clampTransl);
                     globalPhysicsData.Translation.Z = clamp(globalPhysicsData.Translation.Z, -clampTransl, clampTransl);
