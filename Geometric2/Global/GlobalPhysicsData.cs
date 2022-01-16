@@ -7,9 +7,18 @@ namespace Geometric2.Global
     public class GlobalPhysicsData
     {
         public Point[] points = new Point[64];
+        public Vector3[] controlFramePointsPositions = new Vector3[8];
+
         public Vector3 Translation = new Vector3(0, 0, 0);
         //Help
         public object lockPathPointsList = new object { };
+
+        //Conditions
+        public float pointMass;
+        public float resilience_c1;
+        public float resilience_c2;
+        public float tenacityRate_k;
+        public float integrationStep = 0.001f;
 
         //Visualization Settings
         public bool displayControlPoints = true;
@@ -18,11 +27,8 @@ namespace Geometric2.Global
         public bool displayBezierCube = true;
         public bool displayDisortBox = true;
 
-        public int numberOfPointsToShow = 1000;
-
         //Data from user
         public bool gravityOn = false;
-        public InitialConditionsData InitialConditionsData = new InitialConditionsData();
 
         //Visualization Data
         public double diagonalRoundInRadianX = 0.0;
@@ -36,10 +42,12 @@ namespace Geometric2.Global
         public Vector3d gravitation = new Vector3d(0, -9.81, 0);
         public Quaterniond gravitationQuaternion = new Quaterniond(0, -9.81, 0, 0);
 
-        public void CalculateInitialRotationQuaternion()
-        {
-            rotationQuaternion = Quaternion.FromEulerAngles((float)InitialConditionsData.cubeDeviationRadian, 0, 0).Normalized();
-            rotationQuaternionInitial = Quaternion.FromEulerAngles((float)InitialConditionsData.cubeDeviationRadian, 0, 0).Normalized();
-        }
+
+        //new physics data
+        public float SpringStiffness = 1.0f;
+        public float ControlSpringStiffness = 10.0f;
+        public float FrictionCoefficient = 1.0f;
+        public float ControlPointMass = 1.0f;
+        public float RandomVelocityScale = 0.0f;
     }
 }

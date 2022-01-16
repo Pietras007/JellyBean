@@ -50,20 +50,21 @@ namespace Geometric2.ModelGeneration
 
         public override void RenderGlElement(Shader _shader, Shader _shaderLight, Vector3 rotationCentre, GlobalPhysicsData globalPhysicsData)
         {
-            ElementScale = _camera.CameraDist;
-            //Matrix4 modelMatrix = ModelMatrix.CreateModelMatrix(ElementScale * TempElementScale, (float)(2 * Math.PI * ElementRotationX / 360), (float)(2 * Math.PI * ElementRotationY / 360), (float)(2 * Math.PI * ElementRotationZ / 360), CenterPosition + Translation + TemporaryTranslation);
-            TempRotationQuaternion = Quaternion.FromEulerAngles((float)(2 * Math.PI * ElementRotationX / 360), (float)(2 * Math.PI * ElementRotationY / 360), (float)(2 * Math.PI * ElementRotationZ / 360));
-            Matrix4 model = ModelMatrix.CreateModelMatrix(ElementScale * TempElementScale, RotationQuaternion, CenterPosition + Translation + TemporaryTranslation, rotationCentre, TempRotationQuaternion);
-            _shader.SetMatrix4("model", model);
-            GL.BindVertexArray(pointVAO);
-            _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
+            if (globalPhysicsData.displayControlPoints)
+            {
+                ElementScale = _camera.CameraDist;
+                TempRotationQuaternion = Quaternion.FromEulerAngles((float)(2 * Math.PI * ElementRotationX / 360), (float)(2 * Math.PI * ElementRotationY / 360), (float)(2 * Math.PI * ElementRotationZ / 360));
+                Matrix4 model = ModelMatrix.CreateModelMatrix(ElementScale * TempElementScale, RotationQuaternion, CenterPosition + Translation + TemporaryTranslation, rotationCentre, TempRotationQuaternion);
+                _shader.SetMatrix4("model", model);
+                GL.BindVertexArray(pointVAO);
+                _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
 
-            //GL.DrawElements(PrimitiveType.Points, 1, DrawElementsType.UnsignedInt, 0 * sizeof(int));
-            GL.DrawElements(PrimitiveType.Lines, 2 * points.Length, DrawElementsType.UnsignedInt, 0);
-            GL.BindVertexArray(0);
-            ElementScale = 1.0f;
-            model = ModelMatrix.CreateModelMatrix(ElementScale * TempElementScale, RotationQuaternion, CenterPosition + Translation + TemporaryTranslation, rotationCentre, TempRotationQuaternion);
-            _shader.SetMatrix4("model", model);
+                GL.DrawElements(PrimitiveType.Lines, 2 * points.Length, DrawElementsType.UnsignedInt, 0);
+                GL.BindVertexArray(0);
+                ElementScale = 1.0f;
+                model = ModelMatrix.CreateModelMatrix(ElementScale * TempElementScale, RotationQuaternion, CenterPosition + Translation + TemporaryTranslation, rotationCentre, TempRotationQuaternion);
+                _shader.SetMatrix4("model", model);
+            }
         }
 
         public Vector3 Position()

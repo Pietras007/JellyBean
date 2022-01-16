@@ -14,12 +14,12 @@ namespace Geometric2.ModelGeneration
     {
         public bool IsBox { get; set; }
         public bool IsControlFrame { get; set; }
-        public bool IsMoveLine { get; set; }
+        public bool IsControlPoints { get; set; }
+
         public List<Vector3> linePointsList = new List<Vector3>();
         public float[] linesPoints = new float[] { };
         public uint[] linesIndices = new uint[] { };
         int linesVBO, linesVAO, linesEBO;
-        public bool setEBODirectly = false;
 
 
         public override void CreateGlElement(Shader _shader, Shader _shaderLight)
@@ -29,10 +29,7 @@ namespace Geometric2.ModelGeneration
                 GenerateOnlyPoints();
             }
 
-            if (IsControlFrame)
-            {
-                GenerateControlFramePoints(null);
-            }
+            GenerateControlFramePoints(null, new Vector3(0, 0, 0), IsControlFrame);
 
             _shader.Use();
             var a_Position_Location = _shader.GetAttribLocation("a_Position");
@@ -50,36 +47,39 @@ namespace Geometric2.ModelGeneration
 
         public override void RenderGlElement(Shader _shader, Shader _shaderLight, Vector3 rotationCentre, GlobalPhysicsData globalPhysicsData)
         {
-            if (IsControlFrame)
-            {
-                Translation = globalPhysicsData.Translation;
-                GenerateControlFramePoints(globalPhysicsData);
-                FillLineGeometry();
-            }
-
             if (IsBox && globalPhysicsData.displayBox)
             {
-                _shader.Use();
-                var cubeSize = (float)globalPhysicsData.InitialConditionsData.cubeEdgeLength;
-                Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(cubeSize, cubeSize, cubeSize), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
-                _shader.SetMatrix4("model", model);
-                GL.BindVertexArray(linesVAO);
-                _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
-                GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
-                GL.BindVertexArray(0);
+                RenderWithColor(_shader, Color.Black, rotationCentre);
             }
 
-            if(IsControlFrame && globalPhysicsData.displayControlFrame)
+            if (IsControlFrame && globalPhysicsData.displayControlFrame)
             {
-                _shader.Use();
-                var cubeSize = (float)globalPhysicsData.InitialConditionsData.cubeEdgeLength;
-                Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(cubeSize, cubeSize, cubeSize), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
-                _shader.SetMatrix4("model", model);
-                GL.BindVertexArray(linesVAO);
-                _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(Color.Black));
-                GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
-                GL.BindVertexArray(0);
+                GenerateControlFramePoints(globalPhysicsData, globalPhysicsData.Translation);
+                FillLineGeometry();
+                RenderWithColor(_shader, Color.Black, rotationCentre);
             }
+            else
+            {
+                GenerateControlFramePoints(globalPhysicsData, globalPhysicsData.Translation, false);
+            }
+
+            if (IsControlPoints && globalPhysicsData.displayControlPoints)
+            {
+                GenerateControlLines(globalPhysicsData);
+                FillLineGeometry();
+                RenderWithColor(_shader, Color.OrangeRed, rotationCentre);
+            }
+        }
+
+        private void RenderWithColor(Shader _shader, Color color, Vector3 rotationCentre)
+        {
+            _shader.Use();
+            Matrix4 model = ModelMatrix.CreateModelMatrix(new Vector3(1.0f, 1.0f, 1.0f), RotationQuaternion, CenterPosition + Translation, rotationCentre, TempRotationQuaternion);
+            _shader.SetMatrix4("model", model);
+            GL.BindVertexArray(linesVAO);
+            _shader.SetVector3("fragmentColor", ColorHelper.ColorToVector(color));
+            GL.DrawElements(PrimitiveType.Lines, linesIndices.Length, DrawElementsType.UnsignedInt, 0 * sizeof(int));
+            GL.BindVertexArray(0);
         }
 
         private void FillLineGeometry()
@@ -91,47 +91,46 @@ namespace Geometric2.ModelGeneration
             GL.BufferData(BufferTarget.ElementArrayBuffer, linesIndices.Length * sizeof(uint), linesIndices, BufferUsageHint.DynamicDraw);
         }
 
-        private void GenerateControlFramePoints(GlobalPhysicsData globalPhysicsData)
+        private void GenerateControlFramePoints(GlobalPhysicsData globalPhysicsData, Vector3 translation, bool draw = true)
         {
             if (globalPhysicsData != null)
             {
+                var x = ConfigurationData.ControlFrameCubeEdgeLength / 2.0f;
                 linePointsList = new List<Vector3>()
                 {
-                    new Vector3(-1.5f, -1.5f, -1.5f),
-                    new Vector3(-1.5f, -1.5f, 1.5f),
-                    new Vector3(1.5f, -1.5f, 1.5f),
-                    new Vector3(1.5f, -1.5f, -1.5f),
+                    new Vector3(-x, -x, -x) + translation,
+                    new Vector3(-x, -x, x) + translation,
+                    new Vector3(x, -x, x) + translation,
+                    new Vector3(x, -x, -x) + translation,
 
-                    new Vector3(-1.5f, 1.5f, -1.5f),
-                    new Vector3(-1.5f, 1.5f, 1.5f),
-                    new Vector3(1.5f, 1.5f, 1.5f),
-                    new Vector3(1.5f, 1.5f, -1.5f)
+                    new Vector3(-x, x, -x) + translation,
+                    new Vector3(-x, x, x) + translation,
+                    new Vector3(x, x, x) + translation,
+                    new Vector3(x, x, -x) + translation
                 };
 
+                linePointsList.Add(globalPhysicsData.points[0].Position());//8
+                linePointsList.Add(globalPhysicsData.points[3].Position());//9
+                linePointsList.Add(globalPhysicsData.points[12].Position());//10
+                linePointsList.Add(globalPhysicsData.points[15].Position());//11
 
+                linePointsList.Add(globalPhysicsData.points[48].Position());//12
+                linePointsList.Add(globalPhysicsData.points[51].Position());//13
+                linePointsList.Add(globalPhysicsData.points[60].Position());//14
+                linePointsList.Add(globalPhysicsData.points[63].Position());//15
 
-                GenerateOnlyPoints();
-                linesIndices = new uint[] { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
+                MapControlFramePointsPositions(globalPhysicsData, linePointsList);
+
+                if (draw)
+                {
+                    GenerateOnlyPoints();
+                    linesIndices = new uint[]
+                    {
+                        0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7,
+                        0, 8, 1, 9, 4, 10, 5, 11, 2, 13, 3, 12, 6, 15, 7, 14
+                    };
+                }
             }
-        }
-
-        private void GenerateLines()
-        {
-            var tempLinesPoints = new float[3 * linePointsList.Count];
-            var tempLinesIndices = new uint[linePointsList.Count];
-            int idx = 0;
-            var tempLinePointsReference = linePointsList;
-            foreach (var p in tempLinePointsReference)
-            {
-                tempLinesPoints[3 * idx] = p.X;
-                tempLinesPoints[3 * idx + 1] = p.Y;
-                tempLinesPoints[3 * idx + 2] = p.Z;
-                tempLinesIndices[idx] = (uint)idx;
-                idx++;
-            }
-
-            linesPoints = tempLinesPoints;
-            linesIndices = tempLinesIndices;
         }
 
         private void GenerateOnlyPoints()
@@ -145,6 +144,73 @@ namespace Geometric2.ModelGeneration
                 linesPoints[3 * idx + 2] = p.Z;
                 idx++;
             }
+        }
+
+        private void GenerateControlLines(GlobalPhysicsData globalPhysicsData)
+        {
+            if (globalPhysicsData != null)
+            {
+                linePointsList.Clear();
+                List<uint> indices = new List<uint>();
+                foreach (var p in globalPhysicsData.points)
+                {
+                    linePointsList.Add(p.Position());
+                }
+                GenerateOnlyPoints();
+
+                for (uint i = 0; i < 4; i++)
+                {
+                    for (uint j = 0; j < 4; j++)
+                    {
+                        for (uint k = 0; k < 4; k++)
+                        {
+                            if (k < 3)
+                            {
+                                indices.Add(i * 16 + j * 4 + k);
+                                indices.Add(i * 16 + j * 4 + k + 1);
+                            }
+                        }
+                    }
+                }
+
+                for (uint i = 0; i < 16; i++)
+                {
+                    indices.Add(i);
+                    indices.Add(i + 16);
+                    indices.Add(i + 16);
+                    indices.Add(i + 32);
+                    indices.Add(i + 32);
+                    indices.Add(i + 48);
+                }
+
+                for (uint i = 0; i < 4; i++)
+                {
+                    for (uint j = 0; j < 4; j++)
+                    {
+                        uint idx = 16 * i + j;
+                        indices.Add(idx);
+                        indices.Add(idx + 4);
+                        indices.Add(idx + 4);
+                        indices.Add(idx + 8);
+                        indices.Add(idx + 8);
+                        indices.Add(idx + 12);
+                    }
+                }
+
+                linesIndices = indices.ToArray();
+            }
+        }
+
+        private void MapControlFramePointsPositions(GlobalPhysicsData globalPhysicsData, List<Vector3> controlFramePointsPositions)
+        {
+            globalPhysicsData.controlFramePointsPositions[0] = linePointsList[0];
+            globalPhysicsData.controlFramePointsPositions[1] = linePointsList[1];
+            globalPhysicsData.controlFramePointsPositions[2] = linePointsList[4];
+            globalPhysicsData.controlFramePointsPositions[3] = linePointsList[5];
+            globalPhysicsData.controlFramePointsPositions[4] = linePointsList[3];
+            globalPhysicsData.controlFramePointsPositions[5] = linePointsList[2];
+            globalPhysicsData.controlFramePointsPositions[6] = linePointsList[7];
+            globalPhysicsData.controlFramePointsPositions[7] = linePointsList[6];
         }
     }
 }
