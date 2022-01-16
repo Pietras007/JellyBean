@@ -1,15 +1,11 @@
 ﻿using Geometric2.Global;
-using Geometric2.Helpers;
 using Geometric2.ModelGeneration;
 using Geometric2.RasterizationClasses;
-using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using Geometric2.Global;
 using Geometric2.Physics;
 
 namespace Geometric2
@@ -117,9 +113,9 @@ namespace Geometric2
             //var diag = springs.Where(s => s.InitialLength > 1.4f).ToArray();
             //var ones = springs.Where(s => s.InitialLength < 1.4f).ToArray();
 
-            endSimulationButton.Enabled = true;
-            startSimulationButton.Enabled = false;
-            applyConditionsButton.Enabled = false;
+            //endSimulationButton.Enabled = true;
+            //startSimulationButton.Enabled = false;
+            //applyConditionsButton.Enabled = false;
             if (SimulationThread != null)
             {
                 SimulationThread.Abort();
@@ -136,9 +132,9 @@ namespace Geometric2
 
         private void endSimulationButton_Click(object sender, EventArgs e)
         {
-            endSimulationButton.Enabled = false;
-            startSimulationButton.Enabled = true;
-            applyConditionsButton.Enabled = true;
+            //endSimulationButton.Enabled = false;
+            //startSimulationButton.Enabled = true;
+            //applyConditionsButton.Enabled = true;
             if (SimulationThread != null)
             {
                 SimulationThread.Abort();
@@ -192,7 +188,7 @@ namespace Geometric2
                     nanoPrev /= TimeSpan.TicksPerMillisecond;
                     nanoPrev *= 100L;
 
-                    var deltaTime = globalPhysicsData.InitialConditionsData.integrationStep;
+                    var deltaTime = globalPhysicsData.integrationStep;
 
                     controlFrame.CalculateNextStep(
                         deltaTime,
