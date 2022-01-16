@@ -7,6 +7,8 @@ using Geometric2.Global;
 using Geometric2.RasterizationClasses;
 using System.Collections.Generic;
 using Geometric2.Helpers;
+using Geometric2.Models;
+using Geometric2.ModelGeneration;
 
 namespace Geometric2
 {
@@ -42,7 +44,10 @@ namespace Geometric2
         {
             _camera = new Camera(new Vector3(0, 5, 15), glControl1.Width / (float)glControl1.Height);
             Generate();
+            model_data = ModelReader.ReadObjModelFromFile(@"../../../ModelsData/teapot.obj");
+            model = new Model(model_data);
             Elements.Add(cube);
+            Elements.Add(model);
             Elements.Add(xyzLines);
             foreach (var p in globalPhysicsData.points)
             {

@@ -39,10 +39,11 @@ namespace Geometric2
         {
             cameraLightCheckBox.Checked = true;
             StartSimulation();
-
-            var model = ModelReader.ReadObjModelFromFile(@"../../../ModelsData/bunny.obj");
+            
         }
 
+        private MeshVertices model_data;
+        private Model model;
         private Thread SimulationThread = null;
 
         private Shader _shaderLight;

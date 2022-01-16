@@ -28,7 +28,7 @@ namespace Geometric2.Models
             using (var importer = new Assimp.AssimpContext())
             {
                 scene = importer.ImportFile(path,
-                    Assimp.PostProcessSteps.Triangulate | Assimp.PostProcessSteps.FlipUVs);
+                    Assimp.PostProcessSteps.Triangulate | Assimp.PostProcessSteps.FlipUVs | Assimp.PostProcessSteps.GenerateNormals);
             }
 
             var mesh = scene.Meshes.FirstOrDefault();
