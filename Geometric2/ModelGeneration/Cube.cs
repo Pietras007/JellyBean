@@ -21,7 +21,6 @@ namespace Geometric2.ModelGeneration
         Texture specular;
         Texture noise;
         public GlobalPhysicsData first_globalPhysicsData;
-        public CubeData CubeData { get; set; }
 
         public Cube()
         {

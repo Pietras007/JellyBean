@@ -120,6 +120,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RasterizationClasses\Shader.cs" />
     <Compile Include="RasterizationClasses\Texture.cs" />
+    <None Include="ModelsData\bunny.obj" />
+    <None Include="ModelsData\mustang.obj" />
     <None Include="OpenTK.dll.config" />
     <None Include="Shaders\FragmentShaderLines.frag" />
     <EmbeddedResource Include="Form1.resx">

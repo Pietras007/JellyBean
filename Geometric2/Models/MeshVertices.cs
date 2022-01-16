@@ -168,30 +168,30 @@ namespace Geometric2.Models
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
             GL.BufferData(BufferTarget.ElementArrayBuffer, Indices.Length * sizeof(uint), Indices, BufferUsageHint.StaticDraw);
 
-            //Vertex Positions
-            if (HasVertices)
-            {
-                GL.EnableVertexAttribArray(ShaderConstants.ShaderVertexPositionLocation);
-                GL.VertexAttribPointer(ShaderConstants.ShaderVertexPositionLocation, 3, VertexAttribPointerType.Float, false, stride, Marshal.OffsetOf(typeof(Vertex), "Position"));
-            }
-            //Vertex Normals
-            if (HasNormals)
-            {
-                GL.EnableVertexAttribArray(ShaderConstants.ShaderVertexNormalsLocation);
-                GL.VertexAttribPointer(ShaderConstants.ShaderVertexNormalsLocation, 3, VertexAttribPointerType.Float, false, stride, Marshal.OffsetOf(typeof(Vertex), "Normal"));
-            }
-            //Texture Coordinates
-            GL.EnableVertexAttribArray(ShaderConstants.ShaderTextureCoordsLocation);
-            GL.VertexAttribPointer(ShaderConstants.ShaderTextureCoordsLocation, 2, VertexAttribPointerType.Float, false, stride, Marshal.OffsetOf(typeof(Vertex), "TextureCoords"));
-            if (HasTangents)
-            {
-                //Vertex Tangent
-                GL.EnableVertexAttribArray(ShaderConstants.ShaderVertexTangentLocation);
-                GL.VertexAttribPointer(ShaderConstants.ShaderVertexTangentLocation, 3, VertexAttribPointerType.Float, false, stride, Marshal.OffsetOf(typeof(Vertex), "Tangent"));
-                //Vertex Bitangent
-                GL.EnableVertexAttribArray(ShaderConstants.ShaderVertexBiTangentLocation);
-                GL.VertexAttribPointer(ShaderConstants.ShaderVertexBiTangentLocation, 3, VertexAttribPointerType.Float, false, stride, Marshal.OffsetOf(typeof(Vertex), "Bitangent"));
-            }
+            ////Vertex Positions
+            //if (HasVertices)
+            //{
+            //    GL.EnableVertexAttribArray(ShaderConstants.ShaderVertexPositionLocation);
+            //    GL.VertexAttribPointer(ShaderConstants.ShaderVertexPositionLocation, 3, VertexAttribPointerType.Float, false, stride, Marshal.OffsetOf(typeof(Vertex), "Position"));
+            //}
+            ////Vertex Normals
+            //if (HasNormals)
+            //{
+            //    GL.EnableVertexAttribArray(ShaderConstants.ShaderVertexNormalsLocation);
+            //    GL.VertexAttribPointer(ShaderConstants.ShaderVertexNormalsLocation, 3, VertexAttribPointerType.Float, false, stride, Marshal.OffsetOf(typeof(Vertex), "Normal"));
+            //}
+            ////Texture Coordinates
+            //GL.EnableVertexAttribArray(ShaderConstants.ShaderTextureCoordsLocation);
+            //GL.VertexAttribPointer(ShaderConstants.ShaderTextureCoordsLocation, 2, VertexAttribPointerType.Float, false, stride, Marshal.OffsetOf(typeof(Vertex), "TextureCoords"));
+            //if (HasTangents)
+            //{
+            //    //Vertex Tangent
+            //    GL.EnableVertexAttribArray(ShaderConstants.ShaderVertexTangentLocation);
+            //    GL.VertexAttribPointer(ShaderConstants.ShaderVertexTangentLocation, 3, VertexAttribPointerType.Float, false, stride, Marshal.OffsetOf(typeof(Vertex), "Tangent"));
+            //    //Vertex Bitangent
+            //    GL.EnableVertexAttribArray(ShaderConstants.ShaderVertexBiTangentLocation);
+            //    GL.VertexAttribPointer(ShaderConstants.ShaderVertexBiTangentLocation, 3, VertexAttribPointerType.Float, false, stride, Marshal.OffsetOf(typeof(Vertex), "Bitangent"));
+            //}
 
             GL.BindVertexArray(0);
         }
