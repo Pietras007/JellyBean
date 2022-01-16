@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using Geometric2.Global;
 using Geometric2.Helpers;
 using Geometric2.MatrixHelpers;
@@ -28,7 +29,7 @@ namespace Geometric2.ModelGeneration
         {
             indices = model_data.Indices;
             List<float> _cubepoints = new List<float>();
-            foreach(var vertice in model_data.Vertices)
+            foreach (var vertice in model_data.Vertices)
             {
                 points.Add((vertice.Position, vertice.Normal));
                 _cubepoints.Add(vertice.Position.X);
@@ -95,10 +96,10 @@ namespace Geometric2.ModelGeneration
 
         private void InitP()
         {
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 p[i] = new Vector3[4][];
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     p[i][j] = new Vector3[4];
                 }
@@ -107,13 +108,13 @@ namespace Geometric2.ModelGeneration
 
         private void RecalculateP(GlobalPhysicsData globalPhysicsData)
         {
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
-                    for(int k = 0; k < 4; k++)
+                    for (int k = 0; k < 4; k++)
                     {
-                        p[i][j][k] = globalPhysicsData.points[i*16+j*4+k].Position();
+                        p[i][j][k] = globalPhysicsData.points[i * 16 + j * 4 + k].Position();
                     }
                 }
             }
@@ -121,27 +122,24 @@ namespace Geometric2.ModelGeneration
 
         private void RecalculatePoints()
         {
-            List<float> tempPoints = new List<float>();
-            foreach (var p in points)
+            float[] tempPoints = new float[cubePoints.Length];
+            Parallel.For(0, points.Count, i =>
             {
-                var resultPoints = Evaluate(p.Item1);
-                tempPoints.Add(resultPoints.X);
-                tempPoints.Add(resultPoints.Y);
-                tempPoints.Add(resultPoints.Z);
+                var resultPoints = Evaluate(points[i].Item1);
+                tempPoints[8 * i] = (resultPoints.X);
+                tempPoints[8 * i + 1] = (resultPoints.Y);
+                tempPoints[8 * i + 2] = (resultPoints.Z);
 
-                var resultPointsOfBiggerModel = Evaluate(p.Item1 + 0.1f * p.Item2);
+                var resultPointsOfBiggerModel = Evaluate(points[i].Item1 + 0.1f * points[i].Item2);
                 var norm = (resultPointsOfBiggerModel - resultPoints).Normalized();
-                tempPoints.Add(norm.X);
-                tempPoints.Add(norm.Y);
-                tempPoints.Add(norm.Z);
-                //tempPoints.Add(0);
-                //tempPoints.Add(0);
-                //tempPoints.Add(0);
-                tempPoints.Add(0.5f);
-                tempPoints.Add(0.5f);
-            }
+                tempPoints[8 * i + 3] = (norm.X);
+                tempPoints[8 * i + 4] = (norm.Y);
+                tempPoints[8 * i + 5] = (norm.Z);
+                tempPoints[8 * i + 6] = (0.5f);
+                tempPoints[8 * i + 7] = (0.5f);
+            });
 
-            cubePoints = tempPoints.ToArray();
+            cubePoints = tempPoints;
         }
 
         private void RecalculateGeometry()
@@ -158,7 +156,7 @@ namespace Geometric2.ModelGeneration
             float u = uvw.Y;
             float v = uvw.X;
             float w = uvw.Z;
-            float u0 = (1.0f- u) * (1.0f - u) * (1.0f - u);
+            float u0 = (1.0f - u) * (1.0f - u) * (1.0f - u);
             float u1 = 3.0f * u * (1.0f - u) * (1.0f - u);
             float u2 = 3.0f * u * u * (1.0f - u);
             float u3 = u * u * u;

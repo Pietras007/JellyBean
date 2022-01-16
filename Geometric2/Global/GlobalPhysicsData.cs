@@ -31,6 +31,11 @@ namespace Geometric2.Global
         public float ControlSpringStiffness = 1000.0f;
         public float RandomVelocityScale = 0.0f;
 
+        //Round Angles
+        public int roundX = 0;
+        public int roundY = 0;
+        public int roundZ = 0;
+
         //Collisions
         public CollisionType CollisionType = CollisionType.Elastic;
         public CollisionModel CollisionModel = CollisionModel.Model1;

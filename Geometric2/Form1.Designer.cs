@@ -67,6 +67,13 @@ namespace Geometric2
             this.otherLabel = new System.Windows.Forms.Label();
             this.visualizationLabel = new System.Windows.Forms.Label();
             this.initialConditionsLabel = new System.Windows.Forms.Label();
+            this.trackBarX = new System.Windows.Forms.TrackBar();
+            this.roundLabel = new System.Windows.Forms.Label();
+            this.trackBarY = new System.Windows.Forms.TrackBar();
+            this.trackBarZ = new System.Windows.Forms.TrackBar();
+            this.labelX = new System.Windows.Forms.Label();
+            this.labelY = new System.Windows.Forms.Label();
+            this.labelZ = new System.Windows.Forms.Label();
             this.menuStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -77,6 +84,9 @@ namespace Geometric2
             ((System.ComponentModel.ISupportInitialize)(this.cubeDeviationNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeDensityNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeEdgeLengthNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZ)).BeginInit();
             this.SuspendLayout();
             // 
             // glControl1
@@ -161,6 +171,13 @@ namespace Geometric2
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.labelZ);
+            this.panel1.Controls.Add(this.labelY);
+            this.panel1.Controls.Add(this.labelX);
+            this.panel1.Controls.Add(this.trackBarZ);
+            this.panel1.Controls.Add(this.trackBarY);
+            this.panel1.Controls.Add(this.roundLabel);
+            this.panel1.Controls.Add(this.trackBarX);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.collisionCoefficientNumericUpDown);
@@ -584,6 +601,69 @@ namespace Geometric2
             this.initialConditionsLabel.TabIndex = 7;
             this.initialConditionsLabel.Text = "CONDITIONS:";
             // 
+            // trackBarX
+            // 
+            this.trackBarX.Location = new System.Drawing.Point(33, 645);
+            this.trackBarX.Maximum = 359;
+            this.trackBarX.Name = "trackBarX";
+            this.trackBarX.Size = new System.Drawing.Size(195, 45);
+            this.trackBarX.TabIndex = 38;
+            this.trackBarX.Scroll += new System.EventHandler(this.trackBarX_Scroll);
+            // 
+            // roundLabel
+            // 
+            this.roundLabel.AutoSize = true;
+            this.roundLabel.Location = new System.Drawing.Point(20, 615);
+            this.roundLabel.Name = "roundLabel";
+            this.roundLabel.Size = new System.Drawing.Size(42, 13);
+            this.roundLabel.TabIndex = 39;
+            this.roundLabel.Text = "Round:";
+            // 
+            // trackBarY
+            // 
+            this.trackBarY.Location = new System.Drawing.Point(33, 696);
+            this.trackBarY.Maximum = 359;
+            this.trackBarY.Name = "trackBarY";
+            this.trackBarY.Size = new System.Drawing.Size(195, 45);
+            this.trackBarY.TabIndex = 40;
+            this.trackBarY.Scroll += new System.EventHandler(this.trackBarY_Scroll);
+            // 
+            // trackBarZ
+            // 
+            this.trackBarZ.Location = new System.Drawing.Point(33, 747);
+            this.trackBarZ.Maximum = 359;
+            this.trackBarZ.Name = "trackBarZ";
+            this.trackBarZ.Size = new System.Drawing.Size(195, 45);
+            this.trackBarZ.TabIndex = 41;
+            this.trackBarZ.Scroll += new System.EventHandler(this.trackBarZ_Scroll);
+            // 
+            // labelX
+            // 
+            this.labelX.AutoSize = true;
+            this.labelX.Location = new System.Drawing.Point(11, 645);
+            this.labelX.Name = "labelX";
+            this.labelX.Size = new System.Drawing.Size(17, 13);
+            this.labelX.TabIndex = 42;
+            this.labelX.Text = "X:";
+            // 
+            // labelY
+            // 
+            this.labelY.AutoSize = true;
+            this.labelY.Location = new System.Drawing.Point(11, 696);
+            this.labelY.Name = "labelY";
+            this.labelY.Size = new System.Drawing.Size(17, 13);
+            this.labelY.TabIndex = 43;
+            this.labelY.Text = "Y:";
+            // 
+            // labelZ
+            // 
+            this.labelZ.AutoSize = true;
+            this.labelZ.Location = new System.Drawing.Point(11, 747);
+            this.labelZ.Name = "labelZ";
+            this.labelZ.Size = new System.Drawing.Size(17, 13);
+            this.labelZ.TabIndex = 44;
+            this.labelZ.Text = "Z:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -609,6 +689,9 @@ namespace Geometric2
             ((System.ComponentModel.ISupportInitialize)(this.cubeDeviationNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeDensityNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cubeEdgeLengthNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZ)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -654,6 +737,13 @@ namespace Geometric2
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.RadioButton collisionModel_Model2;
         private System.Windows.Forms.RadioButton collisionModel_Model1;
+        private System.Windows.Forms.Label labelZ;
+        private System.Windows.Forms.Label labelY;
+        private System.Windows.Forms.Label labelX;
+        private System.Windows.Forms.TrackBar trackBarZ;
+        private System.Windows.Forms.TrackBar trackBarY;
+        private System.Windows.Forms.Label roundLabel;
+        private System.Windows.Forms.TrackBar trackBarX;
     }
 }
 

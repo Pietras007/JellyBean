@@ -146,6 +146,14 @@ namespace Geometric2
         {
             EndSimulation();
 
+            trackBarX.Value = 0;
+            trackBarY.Value = 0;
+            trackBarZ.Value = 0;
+
+            globalPhysicsData.roundX = 0;
+            globalPhysicsData.roundY = 0;
+            globalPhysicsData.roundZ = 0;
+
             globalPhysicsData.Translation = Vector3.Zero;
             globalPhysicsData.ResetControlPointsPositions();
             controlFrame = new ControlFrame(globalPhysicsData.ControlPointMass, globalPhysicsData.RandomVelocityScale);
@@ -196,6 +204,24 @@ namespace Geometric2
             {
                 SimulationThread.Abort();
             }
+        }
+
+        private void trackBarX_Scroll(object sender, EventArgs e)
+        {
+            int angleX = trackBarX.Value;
+            globalPhysicsData.roundX = angleX;
+        }
+
+        private void trackBarY_Scroll(object sender, EventArgs e)
+        {
+            int angleY = trackBarY.Value;
+            globalPhysicsData.roundY = angleY;
+        }
+
+        private void trackBarZ_Scroll(object sender, EventArgs e)
+        {
+            int angleZ = trackBarZ.Value;
+            globalPhysicsData.roundZ = angleZ;
         }
 
         private void GlobalCalculationFunction()

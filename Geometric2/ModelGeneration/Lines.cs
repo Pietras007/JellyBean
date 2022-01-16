@@ -109,6 +109,13 @@ namespace Geometric2.ModelGeneration
                     new Vector3(x, x, -x) + translation
                 };
 
+                for(int i = 0; i < linePointsList.Count; i++)
+                {
+                    linePointsList[i] = (Matrix4.CreateFromQuaternion(new Quaternion(globalPhysicsData.roundX * 2 * (float)Math.PI / 360, globalPhysicsData.roundY * 2 * (float)Math.PI / 360, globalPhysicsData.roundZ * 2 * (float)Math.PI / 360)) * new Vector4(linePointsList[i], 1.0f)).Xyz;
+                    //linePointsList[i] = (new Quaternion(linePointsList[i], 1.0f) * Quaternion.FromEulerAngles(globalPhysicsData.roundX * 2 * (float)Math.PI/360, globalPhysicsData.roundY * 2 * (float)Math.PI / 360, globalPhysicsData.roundZ * 2 * (float)Math.PI / 360)).Xyz;
+                }
+
+
                 MapControlFramePointsPositions(globalPhysicsData, linePointsList);
 
                 linePointsList.Add(globalPhysicsData.points[0].Position());//8
@@ -120,6 +127,7 @@ namespace Geometric2.ModelGeneration
                 linePointsList.Add(globalPhysicsData.points[51].Position());//13
                 linePointsList.Add(globalPhysicsData.points[60].Position());//14
                 linePointsList.Add(globalPhysicsData.points[63].Position());//15
+
 
                 if (draw)
                 {
