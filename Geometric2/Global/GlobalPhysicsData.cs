@@ -1,6 +1,7 @@
 ﻿using Geometric2.ModelGeneration;
 using OpenTK;
-using System;
+using System.Collections.Generic;
+using Geometric2.RasterizationClasses;
 
 namespace Geometric2.Global
 {
@@ -32,5 +33,64 @@ namespace Geometric2.Global
         public float FrictionCoefficient = 1.0f;
         public float ControlSpringStiffness = 1000.0f;
         public float RandomVelocityScale = 0.0f;
+
+
+        public void InitializeControlPoints(Camera camera)
+        {
+            List<Vector3> controlPoints = new List<Vector3>();
+            var x = ConfigurationData.ControlFrameCubeEdgeLength / 2.0f;
+            var deltaX = ConfigurationData.ControlFrameCubeEdgeLength / 3.0f;
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    for (int k = 0; k < 4; k++)
+                    {
+                        controlPoints.Add(new Vector3(-x + i * deltaX, -x + j * deltaX, -x + k * deltaX));
+                    }
+                }
+            }
+
+            for (int i = 0; i < controlPoints.Count; i++)
+            {
+                points[i] = new ModelGeneration.Point(controlPoints[i], camera, i);
+            }
+
+            int[] controlFramePointsIndices = { 0, 3, 12, 15, 48, 51, 60, 63 };
+
+            for (int i = 0; i < controlFramePointsIndices.Length; i++)
+            {
+                controlFramePointsPositions[i] = controlPoints[controlFramePointsIndices[i]];
+            }
+        }
+
+        public void ResetControlPointsPositions()
+        {
+            List<Vector3> controlPoints = new List<Vector3>();
+            var x = ConfigurationData.ControlFrameCubeEdgeLength / 2.0f;
+            var deltaX = ConfigurationData.ControlFrameCubeEdgeLength / 3.0f;
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    for (int k = 0; k < 4; k++)
+                    {
+                        controlPoints.Add(new Vector3(-x + i * deltaX, -x + j * deltaX, -x + k * deltaX));
+                    }
+                }
+            }
+
+            for (int i = 0; i < controlPoints.Count; i++)
+            {
+                points[i].CenterPosition = controlPoints[i];
+            }
+
+            int[] controlFramePointsIndices = { 0, 3, 12, 15, 48, 51, 60, 63 };
+
+            for (int i = 0; i < controlFramePointsIndices.Length; i++)
+            {
+                controlFramePointsPositions[i] = controlPoints[controlFramePointsIndices[i]];
+            }
+        }
     }
 }

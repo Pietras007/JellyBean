@@ -19,9 +19,9 @@ namespace Geometric2.Physics
         /// </summary>
         public Spring[] ControlSprings;
 
-        private static Random _random = new Random();
+        private static readonly Random Random = new Random();
 
-        public void Initialize(float mass, float randomVelocityScale)
+        public ControlFrame(float mass, float randomVelocityScale)
         {
             ControlPoints = GenerateControlPoints(mass, randomVelocityScale);
             ControlFramePoints = GenerateControlFramePoints(ControlPoints);
@@ -69,6 +69,14 @@ namespace Geometric2.Physics
             return ControlPoints.Select(point => point.LastData.Position).ToArray();
         }
 
+        public void ShakeCube(float randomVelocityScale)
+        {
+            foreach (var point in ControlFramePoints)
+            {
+                point.LastData.Velocity += CalculateRandomVelocity(randomVelocityScale);
+            }
+        }
+
         /// <summary>
         /// All external vertex indices of control points
         /// </summary>
@@ -89,7 +97,7 @@ namespace Geometric2.Physics
                             externalVertexPosition + i * deltaVertexPosition,
                             externalVertexPosition + j * deltaVertexPosition,
                             externalVertexPosition + k * deltaVertexPosition);
-                        var velocity = CalculateInitialVelocity(randomVelocityScale);
+                        var velocity = CalculateRandomVelocity(randomVelocityScale);
                         controlPoints.Add(new ControlPoint(position, velocity, mass));
                     }
                 }
@@ -98,11 +106,11 @@ namespace Geometric2.Physics
             return controlPoints.ToArray();
         }
 
-        public static Vector3 CalculateInitialVelocity(float scale)
+        public static Vector3 CalculateRandomVelocity(float scale)
         {
-            var x = (float)_random.NextDouble() * 2f - 1f;
-            var y = (float)_random.NextDouble() * 2f - 1f;
-            var z = (float)_random.NextDouble() * 2f - 1f;
+            var x = (float)Random.NextDouble() * 2f - 1f;
+            var y = (float)Random.NextDouble() * 2f - 1f;
+            var z = (float)Random.NextDouble() * 2f - 1f;
             return new Vector3(x, y, z).Normalized() * scale;
         }
 

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 using Geometric2.Physics;
+using OpenTK;
 
 namespace Geometric2
 {
@@ -29,8 +30,7 @@ namespace Geometric2
             thread.Start();
             this.glControl1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseWheel);
 
-            controlFrame = new ControlFrame();
-            controlFrame.Initialize(globalPhysicsData.ControlPointMass, globalPhysicsData.RandomVelocityScale);
+            controlFrame = new ControlFrame(globalPhysicsData.ControlPointMass, globalPhysicsData.RandomVelocityScale);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -40,7 +40,6 @@ namespace Geometric2
         }
 
         private Thread SimulationThread = null;
-        private Thread PointListThread = null;
 
         private Shader _shaderLight;
         private Shader _shader;
@@ -112,43 +111,19 @@ namespace Geometric2
 
         private void StartSimulation()
         {
-
-            ////TODO: insert start here
-            //var points = ControlFrame.GenerateControlPoints(1f);
-            //var springs = ControlFrame.GenerateSprings(points);
-            //var diag = springs.Where(s => s.InitialLength > 1.4f).ToArray();
-            //var ones = springs.Where(s => s.InitialLength < 1.4f).ToArray();
-
-            //endSimulationButton.Enabled = true;
-            //startSimulationButton.Enabled = false;
-            //applyConditionsButton.Enabled = false;
             if (SimulationThread != null)
             {
                 SimulationThread.Abort();
-            }
-
-            if (PointListThread != null)
-            {
-                PointListThread.Abort();
             }
 
             this.GlobalCalculationFunction();
-            //this.DrawPath();
         }
 
-        private void endSimulationButton_Click(object sender, EventArgs e)
+        private void EndSimulation()
         {
-            //endSimulationButton.Enabled = false;
-            //startSimulationButton.Enabled = true;
-            //applyConditionsButton.Enabled = true;
             if (SimulationThread != null)
             {
                 SimulationThread.Abort();
-            }
-
-            if (PointListThread != null)
-            {
-                PointListThread.Abort();
             }
         }
 
@@ -240,8 +215,15 @@ namespace Geometric2
 
         private void resetButton_Click(object sender, EventArgs e)
         {
+            EndSimulation();
 
+            globalPhysicsData.Translation = Vector3.Zero;
+            globalPhysicsData.ResetControlPointsPositions();
+            controlFrame = new ControlFrame(globalPhysicsData.ControlPointMass, globalPhysicsData.RandomVelocityScale);
+
+            StartSimulation();
         }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             isProgramWorking = false;

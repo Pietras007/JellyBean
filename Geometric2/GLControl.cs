@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL4;
-using Geometric2.MatrixHelpers;
-using Geometric2.ModelGeneration;
-using System.Numerics;
 using OpenTK;
-using System.Diagnostics;
-using System.Threading;
 using System.Drawing;
 using Geometric2.Global;
 using Geometric2.RasterizationClasses;
@@ -36,32 +31,7 @@ namespace Geometric2
             boxLines.linePointsList = boxPoints;
             boxLines.linesIndices = new uint[] { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
 
-
-            List<Vector3> controlPoints = new List<Vector3>();
-            var x = ConfigurationData.ControlFrameCubeEdgeLength / 2.0f;
-            var deltaX = ConfigurationData.ControlFrameCubeEdgeLength / 3.0f;
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    for (int k = 0; k < 4; k++)
-                    {
-                        controlPoints.Add(new Vector3(-x + i * deltaX, -x + j * deltaX, -x + k * deltaX));
-                    }
-                }
-            }
-
-            for (int i = 0; i < controlPoints.Count; i++)
-            {
-                globalPhysicsData.points[i] = new ModelGeneration.Point(controlPoints[i], _camera, i);
-            }
-
-            int[] controlFramePointsIndices = { 0, 3, 12, 15, 48, 51, 60, 63 };
-
-            for (int i = 0; i < controlFramePointsIndices.Length; i++)
-            {
-                globalPhysicsData.controlFramePointsPositions[i] = globalPhysicsData.points[controlFramePointsIndices[i]].CenterPosition;
-            }
+            globalPhysicsData.InitializeControlPoints(_camera);
 
             controlFrameLines.IsControlFrame = true;
             controlPointLines.IsControlPoints = true;
