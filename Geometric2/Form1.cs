@@ -49,9 +49,6 @@ namespace Geometric2
         private XyzLines xyzLines = new XyzLines();
         private Cube cube = new Cube();
         private List<Element> Elements = new List<Element>();
-        private Lines diagonalLine = new Lines();
-        private Lines cubeLines = new Lines();
-        private Lines pathLines = new Lines();
 
         private Lines boxLines = new Lines();
         private Lines controlFrameLines = new Lines();
