@@ -71,7 +71,7 @@ namespace Geometric2.Physics
 
         public void ShakeCube(float randomVelocityScale)
         {
-            foreach (var point in ControlFramePoints)
+            foreach (var point in ControlPoints)
             {
                 point.LastData.Velocity += CalculateRandomVelocity(randomVelocityScale);
             }

@@ -61,6 +61,7 @@ namespace Geometric2
             this.otherLabel = new System.Windows.Forms.Label();
             this.visualizationLabel = new System.Windows.Forms.Label();
             this.initialConditionsLabel = new System.Windows.Forms.Label();
+            this.shakeButton = new System.Windows.Forms.Button();
             this.menuStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.randomVelocityScaleUpDown1)).BeginInit();
@@ -153,6 +154,7 @@ namespace Geometric2
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.shakeButton);
             this.panel1.Controls.Add(this.resetButton);
             this.panel1.Controls.Add(this.randomVelocityScaleUpDown1);
             this.panel1.Controls.Add(this.label1);
@@ -498,6 +500,16 @@ namespace Geometric2
             this.initialConditionsLabel.TabIndex = 7;
             this.initialConditionsLabel.Text = "CONDITIONS:";
             // 
+            // shakeButton
+            // 
+            this.shakeButton.Location = new System.Drawing.Point(82, 534);
+            this.shakeButton.Name = "shakeButton";
+            this.shakeButton.Size = new System.Drawing.Size(75, 23);
+            this.shakeButton.TabIndex = 33;
+            this.shakeButton.Text = "Shake Cube";
+            this.shakeButton.UseVisualStyleBackColor = true;
+            this.shakeButton.Click += new System.EventHandler(this.shakeButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -559,6 +571,7 @@ namespace Geometric2
         private System.Windows.Forms.NumericUpDown randomVelocityScaleUpDown1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button resetButton;
+        private System.Windows.Forms.Button shakeButton;
     }
 }
 

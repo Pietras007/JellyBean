@@ -224,6 +224,11 @@ namespace Geometric2
             StartSimulation();
         }
 
+        private void shakeButton_Click(object sender, EventArgs e)
+        {
+            controlFrame?.ShakeCube(globalPhysicsData.RandomVelocityScale);
+        }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             isProgramWorking = false;
