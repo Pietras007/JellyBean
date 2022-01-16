@@ -181,9 +181,10 @@ namespace Geometric2
                     Vector3 currentMousePos = GetCoursorGlobalPosition((xPosMouse, yPosMouse), viewMatrix, projectionMatrix, _camera);
                     Vector3 mouseMove = currentMousePos - prevMousePos;
                     globalPhysicsData.Translation += mouseMove;
-                    globalPhysicsData.Translation.X = clamp(globalPhysicsData.Translation.X, -5, 5);
-                    globalPhysicsData.Translation.Y = clamp(globalPhysicsData.Translation.Y, -5, 5);
-                    globalPhysicsData.Translation.Z = clamp(globalPhysicsData.Translation.Z, -5, 5);
+                    var clampTransl = ConfigurationData.BoxEdgeLen / 2 + ConfigurationData.ControlFrameCanGoOutBoxFor;
+                    globalPhysicsData.Translation.X = clamp(globalPhysicsData.Translation.X, -clampTransl, clampTransl);
+                    globalPhysicsData.Translation.Y = clamp(globalPhysicsData.Translation.Y, -clampTransl, clampTransl);
+                    globalPhysicsData.Translation.Z = clamp(globalPhysicsData.Translation.Z, -clampTransl, clampTransl);
                 }
 
                 prev_xPosMouse = xPosMouse;

@@ -39,6 +39,7 @@ namespace Geometric2
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cameraLightCheckBox = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.resetButton = new System.Windows.Forms.Button();
             this.randomVelocityScaleUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.displayBoxCheckBox = new System.Windows.Forms.CheckBox();
@@ -60,7 +61,6 @@ namespace Geometric2
             this.otherLabel = new System.Windows.Forms.Label();
             this.visualizationLabel = new System.Windows.Forms.Label();
             this.initialConditionsLabel = new System.Windows.Forms.Label();
-            this.resetButton = new System.Windows.Forms.Button();
             this.menuStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.randomVelocityScaleUpDown1)).BeginInit();
@@ -181,23 +181,28 @@ namespace Geometric2
             this.panel1.Size = new System.Drawing.Size(252, 885);
             this.panel1.TabIndex = 6;
             // 
+            // resetButton
+            // 
+            this.resetButton.Location = new System.Drawing.Point(161, 10);
+            this.resetButton.Name = "resetButton";
+            this.resetButton.Size = new System.Drawing.Size(75, 23);
+            this.resetButton.TabIndex = 32;
+            this.resetButton.Text = "Reset";
+            this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
+            // 
             // randomVelocityScaleUpDown1
             // 
             this.randomVelocityScaleUpDown1.DecimalPlaces = 2;
             this.randomVelocityScaleUpDown1.Location = new System.Drawing.Point(137, 205);
             this.randomVelocityScaleUpDown1.Maximum = new decimal(new int[] {
-            1000000,
+            1000,
             0,
             0,
             0});
             this.randomVelocityScaleUpDown1.Name = "randomVelocityScaleUpDown1";
             this.randomVelocityScaleUpDown1.Size = new System.Drawing.Size(99, 20);
             this.randomVelocityScaleUpDown1.TabIndex = 31;
-            this.randomVelocityScaleUpDown1.Value = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
             this.randomVelocityScaleUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // label1
@@ -268,17 +273,27 @@ namespace Geometric2
             // angularVelocityNumericUpDown
             // 
             this.angularVelocityNumericUpDown.DecimalPlaces = 2;
+            this.angularVelocityNumericUpDown.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.angularVelocityNumericUpDown.Location = new System.Drawing.Point(116, 165);
             this.angularVelocityNumericUpDown.Maximum = new decimal(new int[] {
             1000000,
             0,
             0,
             0});
+            this.angularVelocityNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.angularVelocityNumericUpDown.Name = "angularVelocityNumericUpDown";
             this.angularVelocityNumericUpDown.Size = new System.Drawing.Size(120, 20);
             this.angularVelocityNumericUpDown.TabIndex = 25;
             this.angularVelocityNumericUpDown.Value = new decimal(new int[] {
-            15,
+            1000,
             0,
             0,
             0});
@@ -289,15 +304,20 @@ namespace Geometric2
             this.cubeDeviationNumericUpDown.DecimalPlaces = 2;
             this.cubeDeviationNumericUpDown.Location = new System.Drawing.Point(116, 123);
             this.cubeDeviationNumericUpDown.Maximum = new decimal(new int[] {
-            360,
+            1000,
             0,
             0,
             0});
+            this.cubeDeviationNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.cubeDeviationNumericUpDown.Name = "cubeDeviationNumericUpDown";
             this.cubeDeviationNumericUpDown.Size = new System.Drawing.Size(120, 20);
             this.cubeDeviationNumericUpDown.TabIndex = 24;
             this.cubeDeviationNumericUpDown.Value = new decimal(new int[] {
-            15,
+            1,
             0,
             0,
             0});
@@ -306,17 +326,27 @@ namespace Geometric2
             // cubeDensityNumericUpDown
             // 
             this.cubeDensityNumericUpDown.DecimalPlaces = 2;
-            this.cubeDensityNumericUpDown.Location = new System.Drawing.Point(116, 82);
-            this.cubeDensityNumericUpDown.Maximum = new decimal(new int[] {
-            1000,
+            this.cubeDensityNumericUpDown.Increment = new decimal(new int[] {
+            100,
             0,
             0,
             0});
+            this.cubeDensityNumericUpDown.Location = new System.Drawing.Point(116, 82);
+            this.cubeDensityNumericUpDown.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.cubeDensityNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.cubeDensityNumericUpDown.Name = "cubeDensityNumericUpDown";
             this.cubeDensityNumericUpDown.Size = new System.Drawing.Size(120, 20);
             this.cubeDensityNumericUpDown.TabIndex = 23;
             this.cubeDensityNumericUpDown.Value = new decimal(new int[] {
-            1,
+            200,
             0,
             0,
             0});
@@ -325,7 +355,17 @@ namespace Geometric2
             // cubeEdgeLengthNumericUpDown
             // 
             this.cubeEdgeLengthNumericUpDown.DecimalPlaces = 2;
+            this.cubeEdgeLengthNumericUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.cubeEdgeLengthNumericUpDown.Location = new System.Drawing.Point(116, 45);
+            this.cubeEdgeLengthNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.cubeEdgeLengthNumericUpDown.Name = "cubeEdgeLengthNumericUpDown";
             this.cubeEdgeLengthNumericUpDown.Size = new System.Drawing.Size(120, 20);
             this.cubeEdgeLengthNumericUpDown.TabIndex = 22;
@@ -333,7 +373,7 @@ namespace Geometric2
             1,
             0,
             0,
-            0});
+            65536});
             this.cubeEdgeLengthNumericUpDown.ValueChanged += new System.EventHandler(this.cubeEdgeLengthNumericUpDown_ValueChanged);
             // 
             // integrationstepLabel
@@ -457,16 +497,6 @@ namespace Geometric2
             this.initialConditionsLabel.Size = new System.Drawing.Size(77, 13);
             this.initialConditionsLabel.TabIndex = 7;
             this.initialConditionsLabel.Text = "CONDITIONS:";
-            // 
-            // resetButton
-            // 
-            this.resetButton.Location = new System.Drawing.Point(161, 10);
-            this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(75, 23);
-            this.resetButton.TabIndex = 32;
-            this.resetButton.Text = "Reset";
-            this.resetButton.UseVisualStyleBackColor = true;
-            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
             // 
             // Form1
             // 
