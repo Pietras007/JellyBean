@@ -80,6 +80,7 @@
     <Compile Include="GLControl.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Global\ConfigurationData.cs" />
     <Compile Include="Global\Enums.cs" />
     <Compile Include="Global\GlobalPhysicsData.cs" />
     <Compile Include="Global\InitialConditionsData.cs" />

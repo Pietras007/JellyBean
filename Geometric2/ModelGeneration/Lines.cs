@@ -106,17 +106,18 @@ namespace Geometric2.ModelGeneration
         {
             if (globalPhysicsData != null)
             {
+                var x = ConfigurationData.ControlFrameCubeEdgeLength / 2.0f;
                 linePointsList = new List<Vector3>()
                 {
-                    new Vector3(-1.5f, -1.5f, -1.5f) + translation,
-                    new Vector3(-1.5f, -1.5f, 1.5f) + translation,
-                    new Vector3(1.5f, -1.5f, 1.5f) + translation,
-                    new Vector3(1.5f, -1.5f, -1.5f) + translation,
+                    new Vector3(-x, -x, -x) + translation,
+                    new Vector3(-x, -x, x) + translation,
+                    new Vector3(x, -x, x) + translation,
+                    new Vector3(x, -x, -x) + translation,
 
-                    new Vector3(-1.5f, 1.5f, -1.5f) + translation,
-                    new Vector3(-1.5f, 1.5f, 1.5f) + translation,
-                    new Vector3(1.5f, 1.5f, 1.5f) + translation,
-                    new Vector3(1.5f, 1.5f, -1.5f) + translation
+                    new Vector3(-x, x, -x) + translation,
+                    new Vector3(-x, x, x) + translation,
+                    new Vector3(x, x, x) + translation,
+                    new Vector3(x, x, -x) + translation
                 };
 
                 linePointsList.Add(globalPhysicsData.points[0].Position());//8
