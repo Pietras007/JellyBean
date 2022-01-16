@@ -212,8 +212,6 @@ namespace Geometric2
                     nanoPrev /= TimeSpan.TicksPerMillisecond;
                     nanoPrev *= 100L;
 
-                    var deltaTime = globalPhysicsData.integrationStep;
-
                     controlFrame.UpdateControlFramePointsPositions(globalPhysicsData.controlFramePointsPositions);
 
                     controlFrame.CalculateNextStep(globalPhysicsData);

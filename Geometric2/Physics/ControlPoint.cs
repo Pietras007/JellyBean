@@ -34,6 +34,7 @@ namespace Geometric2.Physics
             Data.Position = LastData.Position + deltaTime * Data.Velocity;
 
             LastData = Data;
+            LastData.Force = Vector3.Zero;
             Data = PointData.Zero;
         }
 

@@ -125,7 +125,7 @@ namespace Geometric2.Physics
             foreach (var point in ControlPoints)
             {
                 var collision = true;
-                while (collision)
+                //while (collision)
                 {
                     collision = false;
                     //x lower bound is crossed
@@ -241,7 +241,7 @@ namespace Geometric2.Physics
             var x = (float)Random.NextDouble() * 2f - 1f;
             var y = (float)Random.NextDouble() * 2f - 1f;
             var z = (float)Random.NextDouble() * 2f - 1f;
-            return new Vector3(x, y, z).Normalized() * scale;
+            return new Vector3(x, y, z).Normalized() * (float)Random.NextDouble() * scale;
         }
 
         public static Spring[] GenerateSprings(ControlPoint[] controlPoints)
