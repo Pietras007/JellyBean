@@ -36,6 +36,13 @@ namespace Geometric2.Global
         public Vector3d gravitation = new Vector3d(0, -9.81, 0);
         public Quaterniond gravitationQuaternion = new Quaterniond(0, -9.81, 0, 0);
 
+
+        //new physics data
+        public float SpringStiffness = 1.0f;
+        public float ControlSpringStiffness = 10.0f;
+        public float FrictionCoefficient = 1.0f;
+        public float ControlPointMass = 1.0f;
+
         public void CalculateInitialRotationQuaternion()
         {
             rotationQuaternion = Quaternion.FromEulerAngles((float)InitialConditionsData.cubeDeviationRadian, 0, 0).Normalized();

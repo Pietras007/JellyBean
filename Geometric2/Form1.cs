@@ -6,8 +6,10 @@ using Geometric2.ModelGeneration;
 using OpenTK;
 using Geometric2.Helpers;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using Geometric2.Global;
+using Geometric2.Physics;
 
 namespace Geometric2
 {
@@ -116,6 +118,13 @@ namespace Geometric2
 
         private void startSimulationButton_Click(object sender, EventArgs e)
         {
+
+            ////TODO: insert start here
+            //var points = ControlFrame.GenerateControlPoints(1f);
+            //var springs = ControlFrame.GenerateSprings(points);
+            //var diag = springs.Where(s => s.InitialLength > 1.4f).ToArray();
+            //var ones = springs.Where(s => s.InitialLength < 1.4f).ToArray();
+
             endSimulationButton.Enabled = true;
             startSimulationButton.Enabled = false;
             applyConditionsButton.Enabled = false;
@@ -130,7 +139,7 @@ namespace Geometric2
             }
 
             this.GlobalCalculationFunction();
-            this.DrawPath();
+            //this.DrawPath();
         }
 
         private void endSimulationButton_Click(object sender, EventArgs e)
@@ -157,7 +166,7 @@ namespace Geometric2
             temporaryConditionsData.cubeDensity = (double)cubeDensityNumericUpDown.Value;
             temporaryConditionsData.cubeDeviationRadian = (Math.PI / 180) * (double)cubeDeviationNumericUpDown.Value;
             temporaryConditionsData.angularVelocityRadian = (Math.PI / 180) * (double)angularVelocityNumericUpDown.Value;
-            temporaryConditionsData.integrationStep = (double)integrationStepNumericUpDown.Value;
+            temporaryConditionsData.integrationStep = (float)integrationStepNumericUpDown.Value;
 
             InitializePhysicsData();
         }
@@ -184,14 +193,13 @@ namespace Geometric2
 
         private void integrationStepNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            temporaryConditionsData.integrationStep = (double)integrationStepNumericUpDown.Value;
+            temporaryConditionsData.integrationStep = (float)integrationStepNumericUpDown.Value;
         }
 
         private void InitializePhysicsData()
         {
-            globalPhysicsData.CalculateInitialRotationQuaternion();
-            globalPhysicsData.InitialConditionsData.CalculateValues();
-            physicsStepData = GetInitialPhysicsStepData(globalPhysicsData);
+            controlFrame = new ControlFrame();
+            controlFrame.Initialize(globalPhysicsData.ControlPointMass);
         }
 
         private static PhysicsStepData GetInitialPhysicsStepData(GlobalPhysicsData data)
@@ -235,6 +243,8 @@ namespace Geometric2
 
         private PhysicsStepData physicsStepData;
 
+        private ControlFrame controlFrame;
+
         private void GlobalCalculationFunction()
         {
             SimulationThread = new Thread(() =>
@@ -247,71 +257,12 @@ namespace Geometric2
                     nanoPrev *= 100L;
 
                     var deltaTime = globalPhysicsData.InitialConditionsData.integrationStep;
-                    var I = globalPhysicsData.InitialConditionsData.inertiaTensor;
-                    var W = physicsStepData.angularVelocity;
-                    var Q = physicsStepData.quaternion;
 
-                    bool rungeKutta = true;
-
-                    //Rk4
-                    if (rungeKutta)
-                    {
-                        //k1
-                        var N_k1 = CalculateN(globalPhysicsData, ref Q);
-
-                        var W_k1 = deltaTime * CalculateW(N_k1, I, W);
-                        var Q_k1 = deltaTime * CalculateQ(W, Q);
-
-                        var WW_k1 = W + W_k1 * 0.5;
-                        var QQ_k1 = (Q + Q_k1 * 0.5).Normalized();
-                        //k2
-                        var N_k2 = CalculateN(globalPhysicsData, ref QQ_k1);
-
-                        var W_k2 = deltaTime * CalculateW(N_k2, I, WW_k1);
-                        var Q_k2 = deltaTime * CalculateQ(WW_k1, QQ_k1);
-
-                        var WW_k2 = W + W_k2 * 0.5;
-                        var QQ_k2 = (Q + Q_k2 * 0.5).Normalized();
-                        //k3
-                        var N_k3 = CalculateN(globalPhysicsData, ref QQ_k2);
-
-                        var W_k3 = deltaTime * CalculateW(N_k3, I, WW_k2);
-                        var Q_k3 = deltaTime * CalculateQ(WW_k2, QQ_k2);
-
-                        var WW_k3 = W + W_k3;
-                        var QQ_k3 = (Q + Q_k3).Normalized();
-                        //k4
-                        var N_k4 = CalculateN(globalPhysicsData, ref QQ_k3);
-
-                        var W_k4 = deltaTime * CalculateW(N_k4, I, WW_k3);
-                        var Q_k4 = deltaTime * CalculateQ(WW_k3, QQ_k3);
-
-                        var W_new = W + (1d / 6d) * W_k1 + (1d / 3d) * W_k2 + (1d / 3d) * W_k3 + (1d / 6d) * W_k4;
-                        var Q_new = Q + (1d / 6d) * Q_k1 + (1d / 3d) * Q_k2 + (1d / 3d) * Q_k3 + (1d / 6d) * Q_k4;
-
-                        Q_new.Normalize();
-
-                        globalPhysicsData.rotationQuaternion = Q_new.ConvertToQuaternion();
-
-                        physicsStepData.angularVelocity = W_new;
-                        physicsStepData.quaternion = Q_new;
-                    }
-                    //euler
-                    else
-                    {
-                        var N = CalculateN(globalPhysicsData, ref Q);
-
-                        double W_X = ((N.X + (I.Y - I.Z) * W.Y * W.Z) / I.X) * deltaTime + W.X;
-                        double W_Y = ((N.Y + (I.Z - I.X) * W.X * W.Z) / I.Y) * deltaTime + W.Y;
-                        double W_Z = ((N.Z + (I.X - I.Y) * W.X * W.Y) / I.Z) * deltaTime + W.Z;
-
-                        Quaterniond Q_new = 0.5 * Q * new Quaterniond(W_X, W_Y, W_Z, 0) * deltaTime + Q;
-
-                        physicsStepData.angularVelocity = new Vector3d(W_X, W_Y, W_Z);
-                        physicsStepData.quaternion = Q_new;
-
-                        globalPhysicsData.rotationQuaternion = Q_new.ConvertToQuaternion();
-                    }
+                    controlFrame.CalculateNextStep(
+                        deltaTime,
+                        globalPhysicsData.SpringStiffness,
+                        globalPhysicsData.ControlSpringStiffness,
+                        globalPhysicsData.FrictionCoefficient);
 
                     //wait for remaining time to pass
                     long nanoPost;

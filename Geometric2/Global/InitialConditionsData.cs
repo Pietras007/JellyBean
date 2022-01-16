@@ -10,7 +10,7 @@ namespace Geometric2.Global
         public double cubeDensity = 1;
         public double cubeDeviationRadian = (double)(Math.PI / 180) * 15;
         public double angularVelocityRadian = (double)(Math.PI / 180) * 15;
-        public double integrationStep = 0.001;
+        public float integrationStep = 0.001f;
 
         public Vector3d inertiaTensor;
         public double mass;
