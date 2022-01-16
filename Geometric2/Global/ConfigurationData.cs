@@ -11,6 +11,6 @@ namespace Geometric2.Global
         public static readonly float ControlFrameCubeEdgeLength = 3.0f;
         public static readonly float ControlFrameCanGoOutBoxFor = 5.0f;
         public static readonly float BoxEdgeLen = 10.0f;
-        public static readonly int BezierBoxDivisions = 50;
+        public static readonly int BezierBoxDivisions = 3;
     }
 }
