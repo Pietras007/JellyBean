@@ -123,6 +123,7 @@
     <Compile Include="RasterizationClasses\Texture.cs" />
     <None Include="ModelsData\bunny.obj" />
     <None Include="ModelsData\mustang.obj" />
+    <None Include="ModelsData\teapot.obj" />
     <None Include="OpenTK.dll.config" />
     <None Include="Shaders\FragmentShaderLines.frag" />
     <EmbeddedResource Include="Form1.resx">
