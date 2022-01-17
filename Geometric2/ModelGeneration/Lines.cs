@@ -95,26 +95,33 @@ namespace Geometric2.ModelGeneration
         {
             if (globalPhysicsData != null)
             {
+                var toRad = (float)Math.PI / 180f;
+                var rotationQuaternion = Quaternion.FromEulerAngles(
+                    globalPhysicsData.roundX * toRad,
+                    globalPhysicsData.roundY * toRad,
+                    globalPhysicsData.roundZ * toRad);
+
+                var rotationQuaternionConj = Quaternion.Conjugate(rotationQuaternion);
+
                 var x = ConfigurationData.ControlFrameCubeEdgeLength / 2.0f;
                 linePointsList = new List<Vector3>()
                 {
-                    new Vector3(-x, -x, -x) + translation,
-                    new Vector3(-x, -x, x) + translation,
-                    new Vector3(x, -x, x) + translation,
-                    new Vector3(x, -x, -x) + translation,
+                    new Vector3(-x, -x, -x),
+                    new Vector3(-x, -x, x),
+                    new Vector3(x, -x, x),
+                    new Vector3(x, -x, -x),
 
-                    new Vector3(-x, x, -x) + translation,
-                    new Vector3(-x, x, x) + translation,
-                    new Vector3(x, x, x) + translation,
-                    new Vector3(x, x, -x) + translation
+                    new Vector3(-x, x, -x),
+                    new Vector3(-x, x, x),
+                    new Vector3(x, x, x),
+                    new Vector3(x, x, -x)
                 };
 
-                for(int i = 0; i < linePointsList.Count; i++)
+                for (int i = 0; i < linePointsList.Count; i++)
                 {
-                    linePointsList[i] = (Matrix4.CreateFromQuaternion(new Quaternion(globalPhysicsData.roundX * 2 * (float)Math.PI / 360, globalPhysicsData.roundY * 2 * (float)Math.PI / 360, globalPhysicsData.roundZ * 2 * (float)Math.PI / 360)) * new Vector4(linePointsList[i], 1.0f)).Xyz;
-                    //linePointsList[i] = (new Quaternion(linePointsList[i], 1.0f) * Quaternion.FromEulerAngles(globalPhysicsData.roundX * 2 * (float)Math.PI/360, globalPhysicsData.roundY * 2 * (float)Math.PI / 360, globalPhysicsData.roundZ * 2 * (float)Math.PI / 360)).Xyz;
+                    var point = RotatePoint(linePointsList[i], ref rotationQuaternion, ref rotationQuaternionConj);
+                    linePointsList[i] = point + translation;
                 }
-
 
                 MapControlFramePointsPositions(globalPhysicsData, linePointsList);
 
@@ -139,6 +146,12 @@ namespace Geometric2.ModelGeneration
                     };
                 }
             }
+        }
+
+        private Vector3 RotatePoint(Vector3 point, ref Quaternion rotation, ref Quaternion rotationConj)
+        {
+            var pointRotated = rotationConj * new Quaternion(point, 0.0f) * rotation;
+            return pointRotated.Xyz;
         }
 
         private void GenerateOnlyPoints()
