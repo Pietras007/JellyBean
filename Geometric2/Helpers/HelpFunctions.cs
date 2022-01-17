@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenTK;
 
 namespace Geometric2.Helpers
 {
@@ -19,6 +15,12 @@ namespace Geometric2.Helpers
             }
 
             return vert[0];
+        }
+
+        public static Vector3 RotatePoint(Vector3 point, ref Quaternion rotation, ref Quaternion rotationConj)
+        {
+            var pointRotated = rotationConj * new Quaternion(point, 0.0f) * rotation;
+            return pointRotated.Xyz;
         }
     }
 }

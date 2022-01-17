@@ -119,7 +119,7 @@ namespace Geometric2.ModelGeneration
 
                 for (int i = 0; i < linePointsList.Count; i++)
                 {
-                    var point = RotatePoint(linePointsList[i], ref rotationQuaternion, ref rotationQuaternionConj);
+                    var point = HelpFunctions.RotatePoint(linePointsList[i], ref rotationQuaternion, ref rotationQuaternionConj);
                     linePointsList[i] = point + translation;
                 }
 
@@ -146,12 +146,6 @@ namespace Geometric2.ModelGeneration
                     };
                 }
             }
-        }
-
-        private Vector3 RotatePoint(Vector3 point, ref Quaternion rotation, ref Quaternion rotationConj)
-        {
-            var pointRotated = rotationConj * new Quaternion(point, 0.0f) * rotation;
-            return pointRotated.Xyz;
         }
 
         private void GenerateOnlyPoints()

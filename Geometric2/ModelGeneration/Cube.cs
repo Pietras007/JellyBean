@@ -90,11 +90,20 @@ namespace Geometric2.ModelGeneration
             uint maxNoIndice = (uint)(commonIndices.Max());
             var patches = GetC0Patches(globalPhysicsData);
             uint idx = 0;
+
+            var toRad = (float)Math.PI / 180f;
+            var rotationQuaternion = Quaternion.FromEulerAngles(
+                globalPhysicsData.roundX * toRad,
+                globalPhysicsData.roundY * toRad,
+                globalPhysicsData.roundZ * toRad);
+
+            var rotationQuaternionConj = Quaternion.Conjugate(rotationQuaternion);
+
             List<float> tempCubePoints = new List<float>();
             foreach (var patch in patches)
             {
                 Vector3[] patchPoints = GeneratePatchPoints(patch.Item1);
-                tempCubePoints.AddRange(GenerateOnlyPoints(patchPoints.ToList(), patch.Item2));
+                tempCubePoints.AddRange(GenerateOnlyPoints(patchPoints.ToList(), patch.Item2, ref rotationQuaternion, ref rotationQuaternionConj));
                 for (int i = 0; i < numberOfIndicesInPatch; i++)
                 {
                     indicesList.Add(commonIndices[i] + idx * maxNoIndice + idx);
@@ -107,50 +116,58 @@ namespace Geometric2.ModelGeneration
             cubePoints = tempCubePoints.ToArray();
         }
 
-        private float[] GenerateOnlyPoints(List<Vector3> points, int numer)
+        private float[] GenerateOnlyPoints(List<Vector3> points, int number, ref Quaternion rotation, ref Quaternion rotationConj)
         {
             var tempCubePoints = new float[8 * points.Count];
             int idx = 0;
+
+            var norm0 = HelpFunctions.RotatePoint(new Vector3(-1, 0, 0), ref rotation, ref rotationConj);
+            var norm1 = HelpFunctions.RotatePoint(new Vector3(1, 0, 0), ref rotation, ref rotationConj);
+            var norm2 = HelpFunctions.RotatePoint(new Vector3(0, -1, 0), ref rotation, ref rotationConj);
+            var norm3 = HelpFunctions.RotatePoint(new Vector3(0, 1, 0), ref rotation, ref rotationConj);
+            var norm4 = HelpFunctions.RotatePoint(new Vector3(0, 0, -1), ref rotation, ref rotationConj);
+            var norm5 = HelpFunctions.RotatePoint(new Vector3(0, 0, 1), ref rotation, ref rotationConj);
+
             foreach (var p in points)
             {
                 tempCubePoints[8 * idx] = p.X;
                 tempCubePoints[8 * idx + 1] = p.Y;
                 tempCubePoints[8 * idx + 2] = p.Z;
 
-                switch (numer)
+                switch (number)
                 {
                     case 0:
-                        tempCubePoints[8 * idx + 3] = -1;
-                        tempCubePoints[8 * idx + 4] = 0;
-                        tempCubePoints[8 * idx + 5] = 0;
+                        tempCubePoints[8 * idx + 3] = norm0.X;
+                        tempCubePoints[8 * idx + 4] = norm0.Y;
+                        tempCubePoints[8 * idx + 5] = norm0.Z;
                         break;
 
                     case 1:
-                        tempCubePoints[8 * idx + 3] = 1;
-                        tempCubePoints[8 * idx + 4] = 0;
-                        tempCubePoints[8 * idx + 5] = 0;
+                        tempCubePoints[8 * idx + 3] = norm1.X;
+                        tempCubePoints[8 * idx + 4] = norm1.Y;
+                        tempCubePoints[8 * idx + 5] = norm1.Z;
                         break;
 
                     case 2:
-                        tempCubePoints[8 * idx + 3] = 0;
-                        tempCubePoints[8 * idx + 4] = -1;
-                        tempCubePoints[8 * idx + 5] = 0;
+                        tempCubePoints[8 * idx + 3] = norm2.X;
+                        tempCubePoints[8 * idx + 4] = norm2.Y;
+                        tempCubePoints[8 * idx + 5] = norm2.Z;
                         break;
                     case 3:
-                        tempCubePoints[8 * idx + 3] = 0;
-                        tempCubePoints[8 * idx + 4] = 1;
-                        tempCubePoints[8 * idx + 5] = 0;
+                        tempCubePoints[8 * idx + 3] = norm3.X;
+                        tempCubePoints[8 * idx + 4] = norm3.Y;
+                        tempCubePoints[8 * idx + 5] = norm3.Z;
                         break;
 
                     case 4:
-                        tempCubePoints[8 * idx + 3] = 0;
-                        tempCubePoints[8 * idx + 4] = 0;
-                        tempCubePoints[8 * idx + 5] = -1;
+                        tempCubePoints[8 * idx + 3] = norm4.X;
+                        tempCubePoints[8 * idx + 4] = norm4.Y;
+                        tempCubePoints[8 * idx + 5] = norm4.Z;
                         break;
                     case 5:
-                        tempCubePoints[8 * idx + 3] = 0;
-                        tempCubePoints[8 * idx + 4] = 0;
-                        tempCubePoints[8 * idx + 5] = 1;
+                        tempCubePoints[8 * idx + 3] = norm5.X;
+                        tempCubePoints[8 * idx + 4] = norm5.Y;
+                        tempCubePoints[8 * idx + 5] = norm5.Z;
                         break;
                 }
 

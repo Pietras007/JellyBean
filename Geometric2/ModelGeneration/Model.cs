@@ -35,12 +35,12 @@ namespace Geometric2.ModelGeneration
                 _cubepoints.Add(vertice.Position.X);
                 _cubepoints.Add(vertice.Position.Y);
                 _cubepoints.Add(vertice.Position.Z);
-                //_cubepoints.Add(vertice.Normal.X);
-                //_cubepoints.Add(vertice.Normal.Y);
-                //_cubepoints.Add(vertice.Normal.Z);
-                _cubepoints.Add(0);
-                _cubepoints.Add(0);
-                _cubepoints.Add(0);
+                _cubepoints.Add(vertice.Normal.X);
+                _cubepoints.Add(vertice.Normal.Y);
+                _cubepoints.Add(vertice.Normal.Z);
+                //_cubepoints.Add(0);
+                //_cubepoints.Add(0);
+                //_cubepoints.Add(0);
                 _cubepoints.Add(0.5f);
                 _cubepoints.Add(0.5f);
             }
